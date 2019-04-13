@@ -1,7 +1,7 @@
 import { UserCredentials, UserInfo } from '../entities';
 
-export const createTokenUrl = '/api/User/CreateToken';
-export const validateTokenUrl = '/api/User/ValidateToken';
+export const kCreateTokenUrl = 'User/CreateToken';
+export const kValidateTokenUrl = 'User/ValidateToken';
 
 export type CreateTokenRequest = UserCredentials;
 

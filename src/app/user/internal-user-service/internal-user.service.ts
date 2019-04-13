@@ -3,11 +3,11 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 import { Observable, throwError, BehaviorSubject, of } from 'rxjs';
-import { map, catchError, retry, switchMap, tap, filter } from 'rxjs/operators';
+import { catchError, retry, switchMap, tap, filter } from 'rxjs/operators';
 
 import { AlreadyLoginError, BadCredentialsError, BadNetworkError, UnknownError, ServerInternalError } from './errors';
 import {
-  createTokenUrl, validateTokenUrl, CreateTokenRequest,
+  kCreateTokenUrl, kValidateTokenUrl, CreateTokenRequest,
   CreateTokenResponse, ValidateTokenRequest, ValidateTokenResponse
 } from './http-entities';
 import { UserCredentials, UserInfo } from '../entities';
@@ -37,6 +37,8 @@ export interface LoginInfo extends UserCredentials {
   providedIn: 'root'
 })
 export class InternalUserService {
+  createTokenUrl: string;
+  validateTokenUrl: string;
 
   private token: string | null = null;
   private userInfoSubject = new BehaviorSubject<UserInfo | null | undefined>(undefined);
@@ -52,7 +54,11 @@ export class InternalUserService {
     setTimeout(() => snackBar.open(snackBarText[textKey], snackBarText.ok, { duration: 2000 }), 0);
   }
 
-  constructor(@Inject(WINDOW) private window: Window, private httpClient: HttpClient, private router: Router, snackBar: MatSnackBar) {
+  constructor(@Inject(WINDOW) private window: Window, @Inject('API_BASE_URL') api_base_url: string,
+    private httpClient: HttpClient, private router: Router, snackBar: MatSnackBar) {
+    this.createTokenUrl = api_base_url + kCreateTokenUrl;
+    this.validateTokenUrl = api_base_url + kValidateTokenUrl;
+
     const savedToken = this.window.localStorage.getItem(TOKEN_STORAGE_KEY);
     if (savedToken === null) {
       this.openSnackBar(snackBar, 'noLogin');
@@ -76,7 +82,7 @@ export class InternalUserService {
   }
 
   private validateToken(token: string): Observable<UserInfo | null> {
-    return this.httpClient.post<ValidateTokenResponse>(validateTokenUrl, <ValidateTokenRequest>{ token: token }).pipe(
+    return this.httpClient.post<ValidateTokenResponse>(this.validateTokenUrl, <ValidateTokenRequest>{ token: token }).pipe(
       retry(3),
       switchMap(result => {
         if (result.isValid) {
@@ -112,7 +118,7 @@ export class InternalUserService {
       return throwError(new AlreadyLoginError());
     }
 
-    return this.httpClient.post<CreateTokenResponse>(createTokenUrl, <CreateTokenRequest>info).pipe(
+    return this.httpClient.post<CreateTokenResponse>(this.createTokenUrl, <CreateTokenRequest>info).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.error instanceof ErrorEvent) {
           console.error('An error occurred when login: ' + error.error.message);
@@ -132,8 +138,8 @@ export class InternalUserService {
             this.userInfoSubject.next(result.userInfo);
             return of(result.userInfo);
           } else {
-          console.error('An error occurred when login: server return wrong data.');
-          return throwError(new ServerInternalError('Token or userInfo is null.'));
+            console.error('An error occurred when login: server return wrong data.');
+            return throwError(new ServerInternalError('Token or userInfo is null.'));
           }
         } else {
           console.error('An error occurred when login: wrong credentials.');

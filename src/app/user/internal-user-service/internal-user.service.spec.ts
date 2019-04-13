@@ -10,7 +10,7 @@ import { WINDOW } from '../window-inject-token';
 
 import { UserInfo, UserCredentials } from '../entities';
 import {
-  createTokenUrl, validateTokenUrl, CreateTokenRequest,
+  kCreateTokenUrl, kValidateTokenUrl, CreateTokenRequest,
   CreateTokenResponse, ValidateTokenRequest, ValidateTokenResponse
 } from './http-entities';
 import { InternalUserService, SnackBarTextKey, snackBarText, TOKEN_STORAGE_KEY } from './internal-user.service';
@@ -21,6 +21,9 @@ describe('InternalUserService', () => {
   let mockLocalStorage: Mock<Storage>;
   let mockSnackBar: jasmine.SpyObj<MatSnackBar>;
 
+  let createTokenUrl: string;
+  let validateTokenUrl: string;
+
   beforeEach(() => {
     mockLocalStorage = createMockStorage();
     mockSnackBar = jasmine.createSpyObj('MatSnackBar', ['open']);
@@ -29,9 +32,14 @@ describe('InternalUserService', () => {
       providers: [
         { provide: WINDOW, useValue: { localStorage: mockLocalStorage } },
         { provide: Router, useValue: null },
-        { provide: MatSnackBar, useValue: mockSnackBar }
+        { provide: MatSnackBar, useValue: mockSnackBar },
+        { provide: 'API_BASE_URL', useValue: 'http://mock/'}
       ]
     });
+
+    const apiBaseUrl = TestBed.get('API_BASE_URL') as string;
+    createTokenUrl = apiBaseUrl + kCreateTokenUrl;
+    validateTokenUrl = apiBaseUrl + kValidateTokenUrl;
   });
 
   it('should be created', () => {
