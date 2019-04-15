@@ -1,7 +1,7 @@
 import { UserCredentials, UserInfo } from '../entities';
 
 export const kCreateTokenUrl = 'User/CreateToken';
-export const kValidateTokenUrl = 'User/ValidateToken';
+export const kVerifyTokenUrl = 'User/ValidateToken';
 
 export type CreateTokenRequest = UserCredentials;
 
@@ -11,11 +11,11 @@ export interface CreateTokenResponse {
   userInfo?: UserInfo;
 }
 
-export interface ValidateTokenRequest {
+export interface VerifyTokenRequest {
   token: string;
 }
 
-export interface ValidateTokenResponse {
+export interface VerifyTokenResponse {
   isValid: boolean;
   userInfo?: UserInfo;
 }

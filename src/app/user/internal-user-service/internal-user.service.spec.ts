@@ -10,8 +10,8 @@ import { WINDOW } from '../window-inject-token';
 
 import { UserInfo, UserCredentials } from '../entities';
 import {
-  kCreateTokenUrl, kValidateTokenUrl, CreateTokenRequest,
-  CreateTokenResponse, ValidateTokenRequest, ValidateTokenResponse
+  kCreateTokenUrl, kVerifyTokenUrl, CreateTokenRequest,
+  CreateTokenResponse, VerifyTokenRequest, VerifyTokenResponse
 } from './http-entities';
 import { InternalUserService, SnackBarTextKey, snackBarText, TOKEN_STORAGE_KEY } from './internal-user.service';
 import { repeat } from 'src/app/utilities/language-untilities';
@@ -22,7 +22,7 @@ describe('InternalUserService', () => {
   let mockSnackBar: jasmine.SpyObj<MatSnackBar>;
 
   let createTokenUrl: string;
-  let validateTokenUrl: string;
+  let verifyTokenUrl: string;
 
   beforeEach(() => {
     mockLocalStorage = createMockStorage();
@@ -39,7 +39,7 @@ describe('InternalUserService', () => {
 
     const apiBaseUrl = TestBed.get('API_BASE_URL') as string;
     createTokenUrl = apiBaseUrl + kCreateTokenUrl;
-    validateTokenUrl = apiBaseUrl + kValidateTokenUrl;
+    verifyTokenUrl = apiBaseUrl + kVerifyTokenUrl;
   });
 
   it('should be created', () => {
@@ -55,8 +55,8 @@ describe('InternalUserService', () => {
   const mockToken = 'mock-token';
 
   describe('validate token', () => {
-    const validateTokenRequestMatcher = (req: HttpRequest<ValidateTokenRequest>): boolean =>
-      req.url === validateTokenUrl && req.body !== null && req.body.token === mockToken;
+    const validateTokenRequestMatcher = (req: HttpRequest<VerifyTokenRequest>): boolean =>
+      req.url === verifyTokenUrl && req.body !== null && req.body.token === mockToken;
 
     function createTest(
       expectSnackBarTextKey: SnackBarTextKey,
@@ -81,9 +81,9 @@ describe('InternalUserService', () => {
     it('no login should work well', createTest('noLogin', false));
     it('already login should work well', createTest('alreadyLogin', true,
       controller => controller.expectOne(validateTokenRequestMatcher).flush(
-        <ValidateTokenResponse>{ isValid: true, userInfo: mockUserInfo })));
+        <VerifyTokenResponse>{ isValid: true, userInfo: mockUserInfo })));
     it('invalid login should work well', createTest('invalidLogin', true,
-      controller => controller.expectOne(validateTokenRequestMatcher).flush(<ValidateTokenResponse>{ isValid: false })));
+      controller => controller.expectOne(validateTokenRequestMatcher).flush(<VerifyTokenResponse>{ isValid: false })));
     it('check fail should work well', createTest('checkFail', true,
       controller => repeat(4, () => {
         controller.expectOne(validateTokenRequestMatcher).error(new ErrorEvent('Network error', { message: 'simulated network error' }));

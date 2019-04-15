@@ -7,8 +7,8 @@ import { catchError, retry, switchMap, tap, filter } from 'rxjs/operators';
 
 import { AlreadyLoginError, BadCredentialsError, BadNetworkError, UnknownError, ServerInternalError } from './errors';
 import {
-  kCreateTokenUrl, kValidateTokenUrl, CreateTokenRequest,
-  CreateTokenResponse, ValidateTokenRequest, ValidateTokenResponse
+  kCreateTokenUrl, kVerifyTokenUrl, CreateTokenRequest,
+  CreateTokenResponse, VerifyTokenRequest, VerifyTokenResponse
 } from './http-entities';
 import { UserCredentials, UserInfo } from '../entities';
 import { MatSnackBar } from '@angular/material';
@@ -38,7 +38,7 @@ export interface LoginInfo extends UserCredentials {
 })
 export class InternalUserService {
   createTokenUrl: string;
-  validateTokenUrl: string;
+  verifyTokenUrl: string;
 
   private token: string | null = null;
   private userInfoSubject = new BehaviorSubject<UserInfo | null | undefined>(undefined);
@@ -57,14 +57,14 @@ export class InternalUserService {
   constructor(@Inject(WINDOW) private window: Window, @Inject('API_BASE_URL') api_base_url: string,
     private httpClient: HttpClient, private router: Router, snackBar: MatSnackBar) {
     this.createTokenUrl = api_base_url + kCreateTokenUrl;
-    this.validateTokenUrl = api_base_url + kValidateTokenUrl;
+    this.verifyTokenUrl = api_base_url + kVerifyTokenUrl;
 
     const savedToken = this.window.localStorage.getItem(TOKEN_STORAGE_KEY);
     if (savedToken === null) {
       this.openSnackBar(snackBar, 'noLogin');
       this.userInfoSubject.next(null);
     } else {
-      this.validateToken(savedToken).subscribe(result => {
+      this.verifyToken(savedToken).subscribe(result => {
         if (result === null) {
           this.window.localStorage.removeItem(TOKEN_STORAGE_KEY);
           this.openSnackBar(snackBar, 'invalidLogin');
@@ -81,8 +81,8 @@ export class InternalUserService {
     }
   }
 
-  private validateToken(token: string): Observable<UserInfo | null> {
-    return this.httpClient.post<ValidateTokenResponse>(this.validateTokenUrl, <ValidateTokenRequest>{ token: token }).pipe(
+  private verifyToken(token: string): Observable<UserInfo | null> {
+    return this.httpClient.post<VerifyTokenResponse>(this.verifyTokenUrl, <VerifyTokenRequest>{ token: token }).pipe(
       retry(3),
       switchMap(result => {
         if (result.isValid) {
