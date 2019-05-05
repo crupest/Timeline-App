@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { UserService } from './user/user.service';
+// import { UserService } from './user/user.service';
 
 @Component({
   selector: 'app-root',
@@ -9,5 +9,5 @@ import { UserService } from './user/user.service';
 })
 export class AppComponent {
   // never remove userService because we need it explicit constructing.
-  constructor(userService: UserService) { }
+  constructor(/*userService: UserService*/) { }
 }
