@@ -1,18 +1,14 @@
-<div *ngIf="!isLoadCompleted">loading</div>
-<div *ngFor="let item of items; let i = index">
-  <div class="item-box" [class.first-item-box]="i === 0" [class.non-first-item-box]="i !== 0">
-    <app-todo-item @itemEnter [class.align-self-bottom]="i === 0" [item]="item"></app-todo-item>
-    <div class="space"></div>
-    <div class="sample-box" *ngIf="i === 0">
-      <div class="mat-caption sample-item">
-        <span class="sample-color-block color-block-open"></span>
-        <span> means working now.</span>
-      </div>
-      <div class="mat-caption sample-item">
-        <span class="sample-color-block color-block-closed"></span>
-        <span> means completed.</span>
-      </div>
-      <div class="mat-caption">click on item to see details.</div>
+<div id="loadingIndicator" *ngIf="!isLoadCompleted">loading</div>
+<div id="pageBody" *ngIf="isLoadCompleted">
+  <div @rightEnter class="sample-box">
+    <div class="sample-item">
+      <span class="sample-color-block color-block-opened"></span>
+      <span>working now</span>
+    </div>
+    <div class="sample-item">
+      <span class="sample-color-block color-block-closed"></span>
+      <span>completed</span>
     </div>
   </div>
+  <app-todo-item @leftEnter [item]="item" *ngFor="let item of items"></app-todo-item>
 </div>

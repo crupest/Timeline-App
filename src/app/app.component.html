@@ -1,20 +1,17 @@
-<body>
-  <div>
-    <a routerLink="/">
-      <img width="30" height="30" src="assets/icon.svg">Timeline</a>
-    <a routerLink="/todo">TodoList</a>
-    <span class="fill-remaining-space"></span>
-    <a [routerLink]="[{outlets: {user: ['login']}}]">
-      user
-    </a>
-  </div>
+<nav>
+  <a routerLink="/">
+    <img width="30" height="30" src="assets/icon.svg">Timeline</a>
+  <a routerLink="/todo">TodoList</a>
+  <span class="fill-remaining-space"></span>
+  <a>user</a>
+</nav>
 
-  <div>
-    <router-outlet></router-outlet>
-  </div>
+<div>
+  <router-outlet></router-outlet>
+</div>
 
-  <footer>
-    <span class="fill-remaining-space"></span>
-    <a class="icp-record" href="http://www.miitbeian.gov.cn/state/outPortal/loginPortal.action" target=”_blank”>鄂ICP备18030913号-1</a>
-  </footer>
-</body>
+<footer>
+  <span class="fill-remaining-space"></span>
+  <a class="icp-record" href="http://www.miitbeian.gov.cn/state/outPortal/loginPortal.action"
+    target=”_blank”>鄂ICP备18030913号-1</a>
+</footer>

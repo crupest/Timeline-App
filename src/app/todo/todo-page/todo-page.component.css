@@ -1,29 +1,8 @@
-.align-self-bottom {
-  align-self: flex-end;
-}
-
-.item-box {
-  display: flex;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.first-item-box {
-  justify-content: space-between;
-  padding: 0 0 5px 5px;
-}
-
-.non-first-item-box {
-  padding: 5px;
-}
-
-.space {
-  flex: 1 4 20px;
-}
-
 .sample-box {
-  box-sizing: border-box;
-  align-self: flex-start;
+  float: right;
+  background: gainsboro;
+  margin: 0 0 6px 6px;
+  font-size: 0.75rem;
 }
 
 .sample-item {

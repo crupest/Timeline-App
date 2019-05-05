@@ -1,8 +1,6 @@
 <span class="item-color-block" [class.color-block-closed]="item.isClosed"
-  [class.color-block-open]="!item.isClosed"></span>
-<div class="item-body-box">
+  [class.color-block-opened]="!item.isClosed"></span>
+<div class="item-body">
   <span class="item-title">{{ item.number }}. {{ item.title }}</span>
-  <a class="item-detail-button" [href]="item.detailUrl">
-    goto
-  </a>
+  <a class="item-detail-button" [href]="item.detailUrl"><img src="assets/goto.svg"></a>
 </div>

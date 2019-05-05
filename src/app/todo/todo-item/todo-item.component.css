@@ -1,25 +1,20 @@
-.item-card {
-  padding: 0;
+:host {
   display: flex;
-  overflow: hidden;
-}
-
-.item-body-box {
-  margin: 5px!important
 }
 
 .item-color-block {
-  width: 15px;
+  width: 12px;
   align-self: stretch;
   flex: 0 0 auto;
 }
 
-.item-title {
-  vertical-align: middle;
+.item-body {
+  display: flex;
+  align-items: center;
 }
 
 .item-detail-button {
-  width: unset;
-  height: unset;
-  line-height: unset;
+  text-decoration-line: none;
+  display: flex;
+  align-content: center;
 }
