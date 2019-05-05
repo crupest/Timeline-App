@@ -1,12 +1,12 @@
 import { Observable, of } from 'rxjs';
 
 import { AuthGuard, AuthStrategy } from './auth.guard';
-import { UserInfo } from './entities';
+import { UserInfo } from '../entities';
 
 describe('AuthGuard', () => {
   class ConfiurableAuthGuard extends AuthGuard {
-    constructor(mockInternalUserService: any) {
-      super(mockInternalUserService);
+    constructor(userService: any) {
+      super(userService);
     }
 
     authStrategy: AuthStrategy = 'all';

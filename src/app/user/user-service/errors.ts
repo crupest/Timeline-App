@@ -22,7 +22,7 @@ export class UnknownError extends Error {
   }
 }
 
-export class ServerInternalError extends Error {
+export class ServerLogicError extends Error {
   constructor(message?: string) {
     super('Wrong server response. ' + message);
   }

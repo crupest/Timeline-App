@@ -9,11 +9,7 @@ export function getBaseUrl() {
 }
 
 const providers = [
-  { provide: 'BASE_URL', useFactory: getBaseUrl, deps: [] },
-  {
-    provide: 'API_BASE_URL', useValue: environment.production ?
-      'https://api.crupest.xyz/' : 'https://localhost:5001/', deps: []
-  }
+  { provide: 'BASE_URL', useFactory: getBaseUrl, deps: [] }
 ];
 
 if (environment.production) {

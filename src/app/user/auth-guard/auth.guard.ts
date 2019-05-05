@@ -3,13 +3,13 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } fro
 import { Observable } from 'rxjs';
 import { take, map } from 'rxjs/operators';
 
-import { InternalUserService } from './internal-user-service/internal-user.service';
+import { UserService } from '../user-service/user.service';
 
 export type AuthStrategy = 'all' | 'requirelogin' | 'requirenologin' | string[];
 
 export abstract class AuthGuard implements CanActivate {
 
-  constructor(protected internalUserService: InternalUserService) { }
+  constructor(protected userService: UserService) { }
 
   onAuthFailed() { }
 
@@ -24,7 +24,7 @@ export abstract class AuthGuard implements CanActivate {
       return true;
     }
 
-    return this.internalUserService.userInfo$.pipe(take(1), map(userInfo => {
+    return this.userService.userInfo$.pipe(take(1), map(userInfo => {
       if (userInfo === null) {
         if (authStrategy === 'requirenologin') {
           return true;
@@ -54,12 +54,8 @@ export class RequireLoginGuard extends AuthGuard {
   readonly authStrategy: AuthStrategy = 'requirelogin';
 
   // never remove this constructor or you will get an injection error.
-  constructor(internalUserService: InternalUserService) {
-    super(internalUserService);
-  }
-
-  onAuthFailed() {
-    this.internalUserService.userRouteNavigate(['login']);
+  constructor(userService: UserService) {
+    super(userService);
   }
 }
 
@@ -70,11 +66,7 @@ export class RequireNoLoginGuard extends AuthGuard {
   readonly authStrategy: AuthStrategy = 'requirenologin';
 
   // never remove this constructor or you will get an injection error.
-  constructor(internalUserService: InternalUserService) {
-    super(internalUserService);
-  }
-
-  onAuthFailed() {
-    this.internalUserService.userRouteNavigate(['success']);
+  constructor(userService: UserService) {
+    super(userService);
   }
 }

@@ -1,49 +1,43 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { HttpRequest } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material';
+import { TestBed, fakeAsync } from '@angular/core/testing';
 
 import { Mock } from 'src/app/test-utilities/mock';
 import { createMockStorage } from 'src/app/test-utilities/storage.mock';
-import { WINDOW } from '../window-inject-token';
+import { WINDOW, API_BASE_URL } from '../../inject-tokens';
 
 import { UserInfo, UserCredentials } from '../entities';
 import {
   kCreateTokenUrl, kVerifyTokenUrl, CreateTokenRequest,
   CreateTokenResponse, VerifyTokenRequest, VerifyTokenResponse
 } from './http-entities';
-import { InternalUserService, SnackBarTextKey, snackBarText, TOKEN_STORAGE_KEY } from './internal-user.service';
+import { UserService, TOKEN_STORAGE_KEY } from './user.service';
 import { repeat } from 'src/app/utilities/language-untilities';
 
 
-describe('InternalUserService', () => {
+describe('UserService', () => {
   let mockLocalStorage: Mock<Storage>;
-  let mockSnackBar: jasmine.SpyObj<MatSnackBar>;
 
   let createTokenUrl: string;
   let verifyTokenUrl: string;
 
   beforeEach(() => {
     mockLocalStorage = createMockStorage();
-    mockSnackBar = jasmine.createSpyObj('MatSnackBar', ['open']);
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       providers: [
         { provide: WINDOW, useValue: { localStorage: mockLocalStorage } },
-        { provide: Router, useValue: null },
-        { provide: MatSnackBar, useValue: mockSnackBar },
-        { provide: 'API_BASE_URL', useValue: 'http://mock/'}
+        { provide: API_BASE_URL, useValue: 'http://mock/'}
       ]
     });
 
-    const apiBaseUrl = TestBed.get('API_BASE_URL') as string;
+    const apiBaseUrl = TestBed.get(API_BASE_URL) as string;
     createTokenUrl = apiBaseUrl + kCreateTokenUrl;
     verifyTokenUrl = apiBaseUrl + kVerifyTokenUrl;
   });
 
   it('should be created', () => {
-    const service: InternalUserService = TestBed.get(InternalUserService);
+    const service: UserService = TestBed.get(UserService);
     expect(service).toBeTruthy();
   });
 
@@ -54,12 +48,12 @@ describe('InternalUserService', () => {
 
   const mockToken = 'mock-token';
 
-  describe('validate token', () => {
-    const validateTokenRequestMatcher = (req: HttpRequest<VerifyTokenRequest>): boolean =>
+  describe('verify token', () => {
+    const verifyTokenRequestMatcher = (req: HttpRequest<VerifyTokenRequest>): boolean =>
       req.url === verifyTokenUrl && req.body !== null && req.body.token === mockToken;
 
     function createTest(
-      expectSnackBarTextKey: SnackBarTextKey,
+      expectUserInfo: UserInfo | null,
       setStorageToken: boolean,
       setHttpController?: (controller: HttpTestingController) => void
     ): () => void {
@@ -67,27 +61,25 @@ describe('InternalUserService', () => {
         if (setStorageToken) {
           mockLocalStorage.setItem(TOKEN_STORAGE_KEY, mockToken);
         }
-        TestBed.get(InternalUserService);
+        const userService: UserService = TestBed.get(UserService);
         const controller = TestBed.get(HttpTestingController) as HttpTestingController;
         if (setHttpController) {
           setHttpController(controller);
         }
         controller.verify();
-        tick();
-        expect(mockSnackBar.open).toHaveBeenCalledWith(snackBarText[expectSnackBarTextKey], jasmine.anything(), jasmine.anything());
+        expect(userService.currentUserInfo).toEqual(expectUserInfo);
       });
     }
 
-    it('no login should work well', createTest('noLogin', false));
-    it('already login should work well', createTest('alreadyLogin', true,
-      controller => controller.expectOne(validateTokenRequestMatcher).flush(
+    it('no login should work well', createTest(null, false));
+    it('already login should work well', createTest(mockUserInfo, true,
+      controller => controller.expectOne(verifyTokenRequestMatcher).flush(
         <VerifyTokenResponse>{ isValid: true, userInfo: mockUserInfo })));
-    it('invalid login should work well', createTest('invalidLogin', true,
-      controller => controller.expectOne(validateTokenRequestMatcher).flush(<VerifyTokenResponse>{ isValid: false })));
-    it('check fail should work well', createTest('checkFail', true,
-      controller => repeat(4, () => {
-        controller.expectOne(validateTokenRequestMatcher).error(new ErrorEvent('Network error', { message: 'simulated network error' }));
-      })));
+    it('invalid login should work well', createTest(null, true,
+      controller => controller.expectOne(verifyTokenRequestMatcher).flush(<VerifyTokenResponse>{ isValid: false })));
+    it('check fail should work well', createTest(null, true,
+      controller => controller.expectOne(verifyTokenRequestMatcher).error(
+        new ErrorEvent('Network error', { message: 'simulated network error' }))));
   });
 
   describe('login should work well', () => {
@@ -98,9 +90,9 @@ describe('InternalUserService', () => {
 
     function createTest(rememberMe: boolean) {
       return () => {
-        const service: InternalUserService = TestBed.get(InternalUserService);
+        const service: UserService = TestBed.get(UserService);
 
-        service.tryLogin({ ...mockUserCredentials, rememberMe: rememberMe }).subscribe(result => {
+        service.login({ ...mockUserCredentials, rememberMe: rememberMe }).subscribe(result => {
           expect(result).toEqual(mockUserInfo);
         });
 
@@ -115,10 +107,9 @@ describe('InternalUserService', () => {
             userInfo: mockUserInfo
           });
 
-        expect(service.currentUserInfo).toEqual(mockUserInfo);
-
         httpController.verify();
 
+        expect(service.currentUserInfo).toEqual(mockUserInfo);
         expect(mockLocalStorage.getItem(TOKEN_STORAGE_KEY)).toBe(rememberMe ? mockToken : null);
       };
     }
