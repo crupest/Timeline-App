@@ -4,6 +4,7 @@ form {
 
 label.input-label {
   display: block;
+  font-size: 0.85em;
 }
 
 .message {
