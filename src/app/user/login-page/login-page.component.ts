@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { UserService } from '../user-service/user.service';
 
@@ -13,9 +14,10 @@ export type LoginMessage = string | undefined;
 })
 export class LoginPageComponent implements OnInit {
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private router: Router) { }
 
   message: LoginMessage;
+  logining = false;
 
   form = new FormGroup({
     username: new FormControl(''),
@@ -30,11 +32,12 @@ export class LoginPageComponent implements OnInit {
   }
 
   onLoginButtonClick() {
-    console.log('login');
-    /*
+    this.logining = true;
     this.userService.login(this.form.value).subscribe(_ => {
-      this.userService.userRouteNavigate(['success', { fromlogin: 'true' }]);
-    }, (error: Error) => this.message = error.message);
-    */
+      this.router.navigate(['home']);
+    }, (error: Error) => {
+      this.message = error.message;
+      this.logining = false;
+    });
   }
 }

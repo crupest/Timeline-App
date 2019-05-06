@@ -1,24 +1,68 @@
 form {
-  display: flex;
-  flex-wrap: wrap;
+  display: block;
 }
 
-div.w-100 {
-  width: 100%;
+label.input-label {
+  display: block;
+}
+
+.message {
+  color: red;
+  margin: 0;
+}
+
+.input {
+  border: solid darkslategray 1px;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+#rememberMeCheckBox {
+  display: none;
+}
+
+#rememberMeCheckBox + label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 0.85em;
+  user-select: none;
+}
+
+#rememberMeCheckBox + label::before {
+  content: '';
+  border: solid darkslategray 1px;
+  border-radius: 3px;
+  width: 0.8em;
+  height: 0.8em;
+  cursor: pointer;
+}
+
+#rememberMeCheckBox:checked + label::before {
+  content: '';
+  border-radius: 3px;
+  width: 0.8em;
+  height: 0.8em;
+  border: solid darkslategray 1px;
+  border-radius: 3px;
+  background-color: green;
+  background-image: url('/assets/check.svg');
+  background-size: contain;
+  cursor: pointer;
 }
 
 .login-button {
-  margin-left: auto;
+  display: block;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  color: white;
+  font-size: 0.9em;
+  background: seagreen;
+  cursor: pointer;
 }
 
-.no-login-message {
-  color: blue;
-}
-
-.invalid-login-message {
-  color: red;
-}
-
-.error-message {
-  color: red;
+.login-button:disabled {
+  background: rgb(93, 160, 122);
+  cursor: not-allowed;
 }

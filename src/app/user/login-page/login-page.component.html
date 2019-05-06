@@ -1,13 +1,12 @@
 <form [formGroup]="form">
-  <p *ngIf="message" class="error-message">{{ message }}</p>
-  <label>Username</label>
-  <input formControlName="username" matInput type="text" />
-  <div class="w-100"></div>
-  <label>Password</label>
-  <input formControlName="password" matInput type="password" />
-  <div class="w-100"></div>
-  <input type="checkbox" formControlName="rememberMe"/>
-  <label>Remember me.</label>
-  <div class="w-100"></div>
-  <button class="login-button" (appDebounceClick)="onLoginButtonClick()">Login</button>
+  <p *ngIf="message" class="message">{{ message }}</p>
+  <label class="input-label">Username</label>
+  <input formControlName="username" type="text" class="input username-input" />
+  <label class="input-label">Password</label>
+  <input formControlName="password" type="password" class="input password-input" />
+  <div>
+    <input id="rememberMeCheckBox" type="checkbox" formControlName="rememberMe" />
+    <label id="rememberMeLabel" for="rememberMeCheckBox">Remember me.</label>
+  </div>
+  <button class="login-button" (click)="onLoginButtonClick()" [disabled]="logining">login</button>
 </form>

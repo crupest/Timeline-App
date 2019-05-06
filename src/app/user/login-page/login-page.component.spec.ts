@@ -1,21 +1,27 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 
 import { of, throwError } from 'rxjs';
 
 import { createMockUserService } from '../user-service/user.service.mock';
-import { LoginPageComponent } from './login-page.component';
+import { createMockRouter } from 'src/app/test-utilities/router.mock';
+
 import { UserService } from '../user-service/user.service';
 import { UserInfo } from '../entities';
 
-xdescribe('UserLoginComponent', () => {
+import { LoginPageComponent } from './login-page.component';
+
+describe('UserLoginComponent', () => {
   let component: LoginPageComponent;
   let fixture: ComponentFixture<LoginPageComponent>;
   let mockUserService: jasmine.SpyObj<UserService>;
+  let mockRouter: jasmine.SpyObj<Router>;
 
   beforeEach(async(() => {
     mockUserService = createMockUserService();
+    mockRouter = createMockRouter();
 
     // mock property
     (<any>mockUserService).currentUserInfo = null;
@@ -23,7 +29,8 @@ xdescribe('UserLoginComponent', () => {
     TestBed.configureTestingModule({
       declarations: [LoginPageComponent],
       providers: [
-        { provide: UserService, useValue: mockUserService }
+        { provide: UserService, useValue: mockUserService },
+        { provide: Router, useValue: mockRouter }
       ],
       imports: [ReactiveFormsModule],
     })
