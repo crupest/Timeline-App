@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 import { Observable, throwError, BehaviorSubject, of } from 'rxjs';
-import { catchError, switchMap, tap, filter } from 'rxjs/operators';
+import { catchError, switchMap, tap, filter, map } from 'rxjs/operators';
 
 import { UserCredentials, UserInfo } from '../entities';
 import {
@@ -11,6 +11,7 @@ import {
 } from './http-entities';
 import { WINDOW, API_BASE_URL } from '../../inject-tokens';
 import { AlreadyLoginError, BadCredentialsError, BadNetworkError, UnknownError, ServerLogicError } from './errors';
+import { throwIfNullOrUndefined } from 'src/app/utilities/language-untilities';
 
 export const TOKEN_STORAGE_KEY = 'token';
 
@@ -37,7 +38,7 @@ export class UserService {
 
   constructor(
     @Inject(WINDOW) private window: Window,
-    @Inject(API_BASE_URL) api_base_url: string,
+    @Inject(API_BASE_URL) private api_base_url: string,
     private httpClient: HttpClient
   ) {
     this.createTokenUrl = api_base_url + kCreateTokenUrl;
@@ -128,5 +129,13 @@ export class UserService {
     this.window.localStorage.removeItem(TOKEN_STORAGE_KEY);
     this.token = null;
     this.userInfoSubject.next(null);
+  }
+
+  // return avartar url
+  getAvartar(username: string): string {
+    if (this.currentUserInfo == null) {
+      throw new Error('Not login.');
+    }
+    return `${this.api_base_url}user/${username}/avatar?token=${this.token}`;
   }
 }
