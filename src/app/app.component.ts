@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import {Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { UserService } from './user/user-service/user.service';
 import { map } from 'rxjs/operators';
@@ -17,16 +17,19 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private subscription!: Subscription;
+  username: string | null = null;
   avatarUrl: string | null = null;
 
   ngOnInit() {
-    this.subscription = this.userService.userInfo$.pipe(map(userInfo => {
+    this.subscription = this.userService.userInfo$.subscribe(userInfo => {
       if (userInfo == null) {
-        return null;
+        this.username = null;
+        this.avatarUrl = null;
       } else {
-        return this.userService.getAvartar(userInfo.username);
+        this.username = userInfo.username;
+        this.avatarUrl = this.userService.getAvartar(userInfo.username);
       }
-    })).subscribe(url => this.avatarUrl = url);
+    });
   }
 
   ngOnDestroy() {

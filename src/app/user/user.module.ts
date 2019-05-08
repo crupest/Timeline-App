@@ -7,12 +7,14 @@ import { RouterModule } from '@angular/router';
 
 import { RequireNoLoginGuard } from './auth-guard/auth.guard';
 import { LoginPageComponent } from './login-page/login-page.component';
+import { UserPageComponent } from './user-page/user-page.component';
 
 @NgModule({
-  declarations: [LoginPageComponent],
+  declarations: [LoginPageComponent, UserPageComponent],
   imports: [
     RouterModule.forChild([
       { path: 'login', canActivate: [RequireNoLoginGuard], component: LoginPageComponent},
+      { path: 'user/:username', component: UserPageComponent}
     ]),
     CommonModule, HttpClientModule, ReactiveFormsModule, BrowserAnimationsModule
   ],
