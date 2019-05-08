@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 import { Observable, throwError, BehaviorSubject, of } from 'rxjs';
-import { catchError, switchMap, tap, filter, map } from 'rxjs/operators';
+import { catchError, switchMap, tap, filter } from 'rxjs/operators';
 
 import { UserCredentials, UserInfo } from '../entities';
 import {
@@ -11,7 +11,6 @@ import {
 } from './http-entities';
 import { WINDOW, API_BASE_URL } from '../../inject-tokens';
 import { AlreadyLoginError, BadCredentialsError, BadNetworkError, UnknownError, ServerLogicError } from './errors';
-import { throwIfNullOrUndefined } from 'src/app/utilities/language-untilities';
 
 export const TOKEN_STORAGE_KEY = 'token';
 
