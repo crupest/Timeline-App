@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 import { Observable, throwError, BehaviorSubject, of } from 'rxjs';
-import { catchError, switchMap, tap, filter } from 'rxjs/operators';
+import { catchError, switchMap, tap, filter, take, first, concatMap } from 'rxjs/operators';
 
 import { UserCredentials, UserInfo } from '../entities';
 import {
@@ -136,5 +136,21 @@ export class UserService {
       throw new Error('Not login.');
     }
     return `${this.api_base_url}user/${username}/avatar?token=${this.token}`;
+  }
+
+  getUserInfo(username: string): Observable<UserInfo | null> {
+    return this.httpClient.get<UserInfo>(`${this.api_base_url}user/${username}?token=${this.token}`).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 404) {
+          return of(null);
+        } else {
+          return throwError(error);
+        }
+      })
+    );
+  }
+
+  firstCheck<T>(action: () => Observable<T>): Observable<T> {
+    return this.userInfo$.pipe(first(), concatMap(_ => action()));
   }
 }
