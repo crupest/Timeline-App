@@ -1,7 +1,7 @@
 <p *ngIf="userInfo === undefined">Loading...</p>
 <ng-container *ngIf="userInfo !== undefined">
   <p *ngIf="userInfo === null">The user {{username}} does not exits.</p>
-  <ng-container>
+  <ng-container *ngIf="userInfo !== null">
     <p>Username: {{userInfo.username}}</p>
     <p>Roles: {{userInfo.roles}}</p>
   </ng-container>
