@@ -7,7 +7,6 @@ import { RouterModule } from '@angular/router';
 
 import { RequireNoLoginGuard } from './auth-guard/auth.guard';
 import { LoginPageComponent } from './login-page/login-page.component';
-import { UtilityModule } from '../utilities/utility.module';
 
 @NgModule({
   declarations: [LoginPageComponent],
@@ -15,8 +14,7 @@ import { UtilityModule } from '../utilities/utility.module';
     RouterModule.forChild([
       { path: 'login', canActivate: [RequireNoLoginGuard], component: LoginPageComponent},
     ]),
-    CommonModule, HttpClientModule, ReactiveFormsModule, BrowserAnimationsModule,
-    UtilityModule
+    CommonModule, HttpClientModule, ReactiveFormsModule, BrowserAnimationsModule
   ],
   exports: [RouterModule],
 })
