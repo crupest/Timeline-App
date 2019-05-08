@@ -3,7 +3,7 @@
     <img width="30" height="30" src="assets/icon.svg">Timeline</a>
   <a routerLink="/todo">TodoList</a>
   <span class="fill-remaining-space"></span>
-  <a *ngIf="avatarUrl"><img width="32" height="32" [src]="avatarUrl"></a>
+  <a *ngIf="avatarUrl"><img class="avatar" [src]="avatarUrl"></a>
   <a *ngIf="!avatarUrl" routerLink="/login">login</a>
 </nav>
 

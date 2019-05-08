@@ -9,7 +9,6 @@
       "request": "launch",
       "name": "Launch app",
       "runtimeExecutable": "/usr/bin/chromium",
-      "userDataDir": true,
       "url": "http://localhost:4200",
       "webRoot": "${workspaceFolder}"
     }

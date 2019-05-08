@@ -12,6 +12,13 @@ nav a {
   padding: 5px;
 }
 
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
+  background: white;
+}
+
 a.icp-record {
   color: grey;
   text-decoration: none;
