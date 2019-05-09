@@ -1,8 +1,8 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
-import { Observable, throwError, BehaviorSubject, of } from 'rxjs';
-import { catchError, switchMap, tap, filter, take, first, concatMap } from 'rxjs/operators';
+import { Observable, throwError, BehaviorSubject, of, concat} from 'rxjs';
+import { catchError, switchMap, tap, filter, first, skip } from 'rxjs/operators';
 
 import { UserCredentials, UserInfo } from '../entities';
 import {
@@ -30,6 +30,8 @@ export class UserService {
 
   readonly userInfo$: Observable<UserInfo | null> =
     this.userInfoSubject.pipe(filter(value => value !== undefined)) as Observable<UserInfo | null>;
+
+  private afterFirstCheck$: Observable<any> = this.userInfo$.pipe(first(), skip(1));
 
   get currentUserInfo(): UserInfo | null | undefined {
     return this.userInfoSubject.value;
@@ -150,7 +152,7 @@ export class UserService {
     );
   }
 
-  firstCheck<T>(action: () => Observable<T>): Observable<T> {
-    return this.userInfo$.pipe(first(), concatMap(_ => action()));
+  firstCheck<T>(real: Observable<T>): Observable<T> {
+    return concat((this.afterFirstCheck$ as Observable<T>), real);
   }
 }
