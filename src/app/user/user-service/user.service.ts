@@ -1,8 +1,8 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
-import { Observable, throwError, BehaviorSubject, of, concat} from 'rxjs';
-import { catchError, switchMap, tap, filter, first, skip } from 'rxjs/operators';
+import { Observable, throwError, BehaviorSubject, of} from 'rxjs';
+import { catchError, switchMap, tap, filter } from 'rxjs/operators';
 
 import { UserCredentials, UserInfo } from '../entities';
 import {
@@ -30,8 +30,6 @@ export class UserService {
 
   readonly userInfo$: Observable<UserInfo | null> =
     this.userInfoSubject.pipe(filter(value => value !== undefined)) as Observable<UserInfo | null>;
-
-  private afterFirstCheck$: Observable<any> = this.userInfo$.pipe(first(), skip(1));
 
   get currentUserInfo(): UserInfo | null | undefined {
     return this.userInfoSubject.value;
@@ -133,7 +131,7 @@ export class UserService {
   }
 
   // return avartar url
-  getAvartar(username: string): string {
+  getAvartarUrl(username: string): string {
     if (this.currentUserInfo == null) {
       throw new Error('Not login.');
     }
@@ -150,9 +148,5 @@ export class UserService {
         }
       })
     );
-  }
-
-  firstCheck<T>(real: Observable<T>): Observable<T> {
-    return concat((this.afterFirstCheck$ as Observable<T>), real);
   }
 }

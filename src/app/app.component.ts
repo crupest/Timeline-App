@@ -3,7 +3,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { UserService } from './user/user-service/user.service';
-import { map } from 'rxjs/operators';
 
 
 @Component({
@@ -27,7 +26,7 @@ export class AppComponent implements OnInit, OnDestroy {
         this.avatarUrl = null;
       } else {
         this.username = userInfo.username;
-        this.avatarUrl = this.userService.getAvartar(userInfo.username);
+        this.avatarUrl = this.userService.getAvartarUrl(userInfo.username);
       }
     });
   }
