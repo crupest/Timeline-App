@@ -1,37 +1,44 @@
 import { Observable, of } from 'rxjs';
 
 import { AuthGuard, AuthStrategy } from './auth.guard';
-import { UserInfo } from '../entities';
+import { UserDetails } from '../entities';
+import { UserService } from '../user-service/user.service';
 
 describe('AuthGuard', () => {
-  class ConfiurableAuthGuard extends AuthGuard {
-    constructor(userService: any) {
-      super(userService);
+  class TestAuthGuard extends AuthGuard {
+    constructor(userService: any, strategy: AuthStrategy) {
+      super(userService as UserService);
+      this.authStrategy = strategy;
     }
 
-    authStrategy: AuthStrategy = 'all';
+    readonly authStrategy: AuthStrategy;
   }
 
-  let mockUserService: { userInfo$: Observable<UserInfo | null> };
-  let guard: ConfiurableAuthGuard;
-  let onAuthFialedSpy: jasmine.Spy;
+  const mockUser = <UserDetails>{
+    username: 'haha',
+    avatarUrl: '',
+    isAdmin: false
+  };
 
-  const mockRoles = ['role1', 'role2'];
+  const mockAdmin = <UserDetails>{
+    username: 'haha',
+    avatarUrl: '',
+    isAdmin: true
+  };
 
   interface ActivateResultMap {
     nologin: boolean;
-    loginWithNoRole: boolean;
-    loginWithMockRoles: boolean;
+    loginAsUser: boolean;
+    loginAsAdmin: boolean;
   }
-
 
   function createTest(authStrategy: AuthStrategy, result: ActivateResultMap): () => void {
     return () => {
-      guard.authStrategy = authStrategy;
+      const mockUserService: any = {};
+      const guard = new TestAuthGuard(mockUserService, authStrategy);
 
-      function testWith(userInfo: UserInfo | null, r: boolean) {
-        mockUserService.userInfo$ = of(userInfo);
-
+      function testWith(userDetails: UserDetails | null, r: boolean) {
+        mockUserService.user$ = of(userDetails);
         const rawResult = guard.canActivate(<any>null, <any>null);
         if (typeof rawResult === 'boolean') {
           expect(rawResult).toBe(r);
@@ -43,26 +50,20 @@ describe('AuthGuard', () => {
       }
 
       testWith(null, result.nologin);
-      testWith({ username: 'user', roles: [] }, result.loginWithNoRole);
-      testWith({ username: 'user', roles: mockRoles }, result.loginWithMockRoles);
+      testWith(mockUser, result.loginAsUser);
+      testWith(mockAdmin, result.loginAsAdmin);
     };
   }
 
-  beforeEach(() => {
-    mockUserService = { userInfo$: of(null) };
-    guard = new ConfiurableAuthGuard(mockUserService);
-    onAuthFialedSpy = spyOn(guard, 'onAuthFailed');
-  });
-
-
-  it('all should work', createTest('all', { nologin: true, loginWithNoRole: true, loginWithMockRoles: true }));
-  it('require login should work', createTest('requirelogin', { nologin: false, loginWithNoRole: true, loginWithMockRoles: true }));
-  it('require no login should work', createTest('requirenologin', { nologin: true, loginWithNoRole: false, loginWithMockRoles: false }));
-  it('good roles should work', createTest(mockRoles, { nologin: false, loginWithNoRole: false, loginWithMockRoles: true }));
-  it('bad roles should work', createTest(['role3'], { nologin: false, loginWithNoRole: false, loginWithMockRoles: false }));
+  it('all should work', createTest('all', { nologin: true, loginAsUser: true, loginAsAdmin: true }));
+  it('nologin should work', createTest('nologin', { nologin: true, loginAsUser: false, loginAsAdmin: false }));
+  it('user should work', createTest('user', { nologin: false, loginAsUser: true, loginAsAdmin: true }));
+  it('admin should work', createTest('admin', { nologin: false, loginAsUser: false, loginAsAdmin: true }));
 
   it('auth failed callback should be called', () => {
-    guard.authStrategy = 'requirelogin';
+    const mockUserService: any = { user$: of(null) };
+    const guard = new TestAuthGuard(mockUserService, 'user');
+    const onAuthFialedSpy = spyOn(guard, 'onAuthFailed');
     (<Observable<boolean>>guard.canActivate(<any>null, <any>null)).subscribe();
     expect(onAuthFialedSpy).toHaveBeenCalled();
   });

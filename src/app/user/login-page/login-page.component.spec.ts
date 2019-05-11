@@ -8,8 +8,8 @@ import { of, throwError } from 'rxjs';
 import { createMockUserService } from '../user-service/user.service.mock';
 import { createMockRouter } from 'src/app/test-utilities/router.mock';
 
+import { UserDetails } from '../entities';
 import { UserService } from '../user-service/user.service';
-import { UserInfo } from '../entities';
 
 import { LoginPageComponent } from './login-page.component';
 
@@ -78,7 +78,8 @@ describe('UserLoginComponent', () => {
       rememberMe: true
     };
 
-    mockUserService.login.withArgs(mockValue).and.returnValue(of(<UserInfo>{ username: 'user', roles: ['user'] }));
+    mockUserService.login.withArgs(mockValue).and.returnValue(of(<UserDetails>{
+      username: 'user', avatarUrl: '', isAdmin: false }));
 
     component.form.setValue(mockValue);
     component.onLoginButtonClick();

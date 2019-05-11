@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
-import { take, map } from 'rxjs/operators';
+import { take, map, tap } from 'rxjs/operators';
 
 import { UserService } from '../user-service/user.service';
 
-export type AuthStrategy = 'all' | 'requirelogin' | 'requirenologin' | string[];
+export type AuthStrategy = 'all' | 'nologin' | 'user' | 'admin';
 
 export abstract class AuthGuard implements CanActivate {
 
@@ -24,25 +24,20 @@ export abstract class AuthGuard implements CanActivate {
       return true;
     }
 
-    return this.userService.userInfo$.pipe(take(1), map(userInfo => {
-      if (userInfo === null) {
-        if (authStrategy === 'requirenologin') {
-          return true;
-        }
+    return this.userService.user$.pipe(take(1), map(userDetails => {
+      if (authStrategy === 'nologin' && userDetails === null) {
+        return true;
+      } else if (authStrategy === 'user' && userDetails !== null) {
+        return true;
+      } else if (authStrategy === 'admin' && userDetails !== null && userDetails.isAdmin) {
+        return true;
       } else {
-        if (authStrategy === 'requirelogin') {
-          return true;
-        } else if (authStrategy instanceof Array) {
-          const { roles } = userInfo;
-          if (authStrategy.every(value => roles.includes(value))) {
-            return true;
-          }
-        }
+        return false;
       }
-
-      // reach here means auth fails
-      this.onAuthFailed();
-      return false;
+    }), tap(result => {
+      if (!result) {
+        this.onAuthFailed();
+      }
     }));
   }
 }
@@ -51,7 +46,7 @@ export abstract class AuthGuard implements CanActivate {
   providedIn: 'root'
 })
 export class RequireLoginGuard extends AuthGuard {
-  readonly authStrategy: AuthStrategy = 'requirelogin';
+  readonly authStrategy: AuthStrategy = 'user';
 
   // never remove this constructor or you will get an injection error.
   constructor(userService: UserService) {
@@ -63,7 +58,7 @@ export class RequireLoginGuard extends AuthGuard {
   providedIn: 'root'
 })
 export class RequireNoLoginGuard extends AuthGuard {
-  readonly authStrategy: AuthStrategy = 'requirenologin';
+  readonly authStrategy: AuthStrategy = 'nologin';
 
   // never remove this constructor or you will get an injection error.
   constructor(userService: UserService) {

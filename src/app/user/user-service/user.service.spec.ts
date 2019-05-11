@@ -6,19 +6,20 @@ import { Mock } from 'src/app/test-utilities/mock';
 import { createMockStorage } from 'src/app/test-utilities/storage.mock';
 import { WINDOW, API_BASE_URL } from '../../inject-tokens';
 
-import { UserInfo, UserCredentials } from '../entities';
 import {
   kCreateTokenUrl, kVerifyTokenUrl, CreateTokenRequest,
-  CreateTokenResponse, VerifyTokenRequest, VerifyTokenResponse
+  CreateTokenResponse, VerifyTokenRequest, VerifyTokenResponse, UserInfo
 } from './http-entities';
 import { UserService, TOKEN_STORAGE_KEY } from './user.service';
+import { UserDetails } from '../entities';
 
 
 describe('UserService', () => {
-  let mockLocalStorage: Mock<Storage>;
+  const mockApiBaseUrl = 'http://mock/';
+  const mockCreateTokenUrl = mockApiBaseUrl + kCreateTokenUrl;
+  const mockVerifyTokenUrl = mockApiBaseUrl + kVerifyTokenUrl;
 
-  let createTokenUrl: string;
-  let verifyTokenUrl: string;
+  let mockLocalStorage: Mock<Storage>;
 
   beforeEach(() => {
     mockLocalStorage = createMockStorage();
@@ -26,13 +27,9 @@ describe('UserService', () => {
       imports: [HttpClientTestingModule],
       providers: [
         { provide: WINDOW, useValue: { localStorage: mockLocalStorage } },
-        { provide: API_BASE_URL, useValue: 'http://mock/'}
+        { provide: API_BASE_URL, useValue: mockApiBaseUrl}
       ]
     });
-
-    const apiBaseUrl = TestBed.get(API_BASE_URL) as string;
-    createTokenUrl = apiBaseUrl + kCreateTokenUrl;
-    verifyTokenUrl = apiBaseUrl + kVerifyTokenUrl;
   });
 
   it('should be created', () => {
@@ -42,17 +39,21 @@ describe('UserService', () => {
 
   const mockUserInfo: UserInfo = {
     username: 'user',
-    roles: ['user', 'other']
+    roles: ['user', 'admin']
   };
-
   const mockToken = 'mock-token';
+  const mockUserDetails: UserDetails = {
+    username: 'user',
+    avatarUrl: mockApiBaseUrl + 'user/user/avatar?token=mock-token',
+    isAdmin: true
+  }
 
   describe('verify token', () => {
     const verifyTokenRequestMatcher = (req: HttpRequest<VerifyTokenRequest>): boolean =>
-      req.url === verifyTokenUrl && req.body !== null && req.body.token === mockToken;
+      req.url === mockVerifyTokenUrl && req.body !== null && req.body.token === mockToken;
 
     function createTest(
-      expectUserInfo: UserInfo | null,
+      expectUserDetails: UserDetails | null,
       setStorageToken: boolean,
       setHttpController?: (controller: HttpTestingController) => void
     ): () => void {
@@ -61,17 +62,18 @@ describe('UserService', () => {
           mockLocalStorage.setItem(TOKEN_STORAGE_KEY, mockToken);
         }
         const userService: UserService = TestBed.get(UserService);
+        userService.checkSavedLoginState();
         const controller = TestBed.get(HttpTestingController) as HttpTestingController;
         if (setHttpController) {
           setHttpController(controller);
         }
         controller.verify();
-        expect(userService.currentUserInfo).toEqual(expectUserInfo);
+        expect(userService.currentUserInfo).toEqual(expectUserDetails);
       });
     }
 
     it('no login should work well', createTest(null, false));
-    it('already login should work well', createTest(mockUserInfo, true,
+    it('already login should work well', createTest(mockUserDetails, true,
       controller => controller.expectOne(verifyTokenRequestMatcher).flush(
         <VerifyTokenResponse>{ isValid: true, userInfo: mockUserInfo })));
     it('invalid login should work well', createTest(null, true,
@@ -82,7 +84,7 @@ describe('UserService', () => {
   });
 
   describe('login should work well', () => {
-    const mockUserCredentials: UserCredentials = {
+    const mockUserCredentials: CreateTokenRequest = {
       username: 'user',
       password: 'user'
     };
@@ -92,13 +94,13 @@ describe('UserService', () => {
         const service: UserService = TestBed.get(UserService);
 
         service.login({ ...mockUserCredentials, rememberMe: rememberMe }).subscribe(result => {
-          expect(result).toEqual(mockUserInfo);
+          expect(result).toEqual(mockUserDetails);
         });
 
         const httpController = TestBed.get(HttpTestingController) as HttpTestingController;
 
         httpController.expectOne((request: HttpRequest<CreateTokenRequest>) =>
-          request.url === createTokenUrl && request.body !== null &&
+          request.url === mockCreateTokenUrl && request.body !== null &&
           request.body.username === mockUserCredentials.username &&
           request.body.password === mockUserCredentials.password).flush(<CreateTokenResponse>{
             success: true,
@@ -108,7 +110,7 @@ describe('UserService', () => {
 
         httpController.verify();
 
-        expect(service.currentUserInfo).toEqual(mockUserInfo);
+        expect(service.currentUserInfo).toEqual(mockUserDetails);
         expect(mockLocalStorage.getItem(TOKEN_STORAGE_KEY)).toBe(rememberMe ? mockToken : null);
       };
     }

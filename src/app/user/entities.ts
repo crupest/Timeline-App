@@ -1,9 +1,11 @@
-export interface UserCredentials {
+export interface LoginInfo  {
   username: string;
   password: string;
+  rememberMe: boolean;
 }
 
-export interface UserInfo {
-  username: string;
-  roles: string[];
+export interface UserDetails {
+  readonly username: string;
+  readonly avatarUrl: string;
+  readonly isAdmin: boolean;
 }

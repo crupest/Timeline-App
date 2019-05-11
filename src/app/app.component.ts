@@ -20,13 +20,14 @@ export class AppComponent implements OnInit, OnDestroy {
   avatarUrl: string | null = null;
 
   ngOnInit() {
-    this.subscription = this.userService.userInfo$.subscribe(userInfo => {
+    this.userService.checkSavedLoginState();
+    this.subscription = this.userService.user$.subscribe(userInfo => {
       if (userInfo == null) {
         this.username = null;
         this.avatarUrl = null;
       } else {
         this.username = userInfo.username;
-        this.avatarUrl = this.userService.getAvartarUrl(userInfo.username);
+        this.avatarUrl = this.userService.generateAvartarUrl(userInfo.username);
       }
     });
   }

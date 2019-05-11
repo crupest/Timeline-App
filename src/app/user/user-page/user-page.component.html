@@ -4,7 +4,7 @@
   <p *ngSwitchCase="'notexist'">The user <span class="username">{{username}}</span> does not exits.</p>
   <div *ngSwitchCase="'ok'" class="container">
     <div class="user-info">
-      <img [src]="user.avatar" class="avatar">
+      <img [src]="user.avatarUrl" class="avatar">
       <p>Username: <span class="username">{{user.username}}</span></p>
       <p>Role: <span *ngIf="user.isAdmin" class="role-admin">administrator</span><span *ngIf="!user.isAdmin"
           class="role-user">normal user</span></p>

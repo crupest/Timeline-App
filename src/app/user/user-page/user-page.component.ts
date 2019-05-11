@@ -3,15 +3,10 @@ import { Component } from '@angular/core';
 import { throwError, of } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 
-import { UserInfo } from '../entities';
-
+import { UserDetails } from '../entities';
 import { UserService } from '../user-service/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
-export interface UserDetails extends UserInfo {
-  avatar: string;
-  readonly isAdmin: boolean;
-}
 
 @Component({
   selector: 'app-user-page',
@@ -20,8 +15,8 @@ export interface UserDetails extends UserInfo {
 })
 export class UserPageComponent {
 
-  constructor(private userService: UserService, private activatedRoute: ActivatedRoute, private router: Router) {
-    userService.userInfo$.pipe(take(1)).subscribe(u => {
+  constructor(private userService: UserService, activatedRoute: ActivatedRoute, private router: Router) {
+    userService.user$.pipe(take(1)).subscribe(u => {
       if (u == null) {
         this.state = 'nologin';
       } else {
@@ -38,17 +33,13 @@ export class UserPageComponent {
             this.isSelf = true;
             return of(u);
           } else {
-            return userService.getUserInfo(username);
+            return userService.getUserDetails(username);
           }
-        })).subscribe(userInfo => {
-          if (userInfo === null) {
+        })).subscribe(user => {
+          if (user === null) {
             this.state = 'notexist';
           } else {
-            this.user = {
-              ...userInfo,
-              avatar: this.userService.getAvartarUrl(userInfo.username),
-              isAdmin: userInfo.roles.includes('admin')
-            };
+            this.user = user;
             this.state = 'ok';
           }
         });
@@ -58,8 +49,8 @@ export class UserPageComponent {
 
   state: 'loading' | 'nologin' | 'notexist' | 'ok' = 'loading';
   isSelf = false;
-  username: string | undefined;
-  user: UserDetails | undefined;
+  username!: string;
+  user!: UserDetails;
 
   logout() {
     this.userService.logout();

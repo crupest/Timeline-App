@@ -1,22 +1,20 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
-import { Observable, throwError, BehaviorSubject, of} from 'rxjs';
-import { catchError, switchMap, tap, filter } from 'rxjs/operators';
+import { Observable, throwError, BehaviorSubject, of } from 'rxjs';
+import { catchError, switchMap, tap, filter, map } from 'rxjs/operators';
 
-import { UserCredentials, UserInfo } from '../entities';
+import { LoginInfo, UserDetails } from '../entities';
 import {
   kCreateTokenUrl, kVerifyTokenUrl, CreateTokenRequest,
-  CreateTokenResponse, VerifyTokenRequest, VerifyTokenResponse
+  CreateTokenResponse, VerifyTokenRequest, VerifyTokenResponse, UserInfo
 } from './http-entities';
+
 import { WINDOW, API_BASE_URL } from '../../inject-tokens';
-import { AlreadyLoginError, BadCredentialsError, BadNetworkError, UnknownError, ServerLogicError } from './errors';
+import { BadCredentialsError, UnknownError, ServerLogicError } from './errors';
+
 
 export const TOKEN_STORAGE_KEY = 'token';
-
-export interface LoginInfo extends UserCredentials {
-  rememberMe: boolean;
-}
 
 @Injectable({
   providedIn: 'root'
@@ -26,39 +24,22 @@ export class UserService {
   verifyTokenUrl: string;
 
   private token: string | null = null;
-  private userInfoSubject = new BehaviorSubject<UserInfo | null | undefined>(undefined);
+  private userSubject = new BehaviorSubject<UserDetails | null | undefined>(undefined);
 
-  readonly userInfo$: Observable<UserInfo | null> =
-    this.userInfoSubject.pipe(filter(value => value !== undefined)) as Observable<UserInfo | null>;
+  readonly user$: Observable<UserDetails | null> =
+    this.userSubject.pipe(filter(value => value !== undefined)) as Observable<UserDetails | null>;
 
-  get currentUserInfo(): UserInfo | null | undefined {
-    return this.userInfoSubject.value;
+  get currentUserInfo(): UserDetails | null | undefined {
+    return this.userSubject.value;
   }
 
   constructor(
     @Inject(WINDOW) private window: Window,
-    @Inject(API_BASE_URL) private api_base_url: string,
+    @Inject(API_BASE_URL) private apiBaseUrl: string,
     private httpClient: HttpClient
   ) {
-    this.createTokenUrl = api_base_url + kCreateTokenUrl;
-    this.verifyTokenUrl = api_base_url + kVerifyTokenUrl;
-
-    const savedToken = this.window.localStorage.getItem(TOKEN_STORAGE_KEY);
-    if (savedToken === null) {
-      this.userInfoSubject.next(null);
-    } else {
-      this.verifyToken(savedToken).subscribe(result => {
-        if (result === null) {
-          this.window.localStorage.removeItem(TOKEN_STORAGE_KEY);
-          this.userInfoSubject.next(null);
-        } else {
-          this.token = savedToken;
-          this.userInfoSubject.next(result);
-        }
-      }, _ => {
-        this.userInfoSubject.next(null);
-      });
-    }
+    this.createTokenUrl = apiBaseUrl + kCreateTokenUrl;
+    this.verifyTokenUrl = apiBaseUrl + kVerifyTokenUrl;
   }
 
   private verifyToken(token: string): Observable<UserInfo | null> {
@@ -77,27 +58,52 @@ export class UserService {
       }),
       tap({
         error: error => {
-          console.error('Failed to verify token.');
-          console.error(error);
+          console.error('Failed to verify token. Error is ', error);
         }
       }),
     );
   }
 
-  login(info: LoginInfo): Observable<UserInfo> {
+  private generateUserDetails(userInfo: UserInfo): UserDetails {
+    const t = this;
+    return <UserDetails>{
+      username: userInfo.username,
+      isAdmin: userInfo.roles.includes('admin'),
+      get avatarUrl() {
+        return t.generateAvartarUrl(this.username);
+      }
+    };
+  }
+
+  checkSavedLoginState() {
+    const savedToken = this.window.localStorage.getItem(TOKEN_STORAGE_KEY);
+    if (savedToken === null) {
+      this.userSubject.next(null);
+    } else {
+      this.verifyToken(savedToken).subscribe({
+        next: userInfo => {
+          if (userInfo === null) {
+            this.window.localStorage.removeItem(TOKEN_STORAGE_KEY);
+            this.userSubject.next(null);
+          } else {
+            this.token = savedToken;
+            this.userSubject.next(this.generateUserDetails(userInfo));
+          }
+        },
+        error: _ => this.userSubject.next(null)
+      });
+    }
+  }
+
+  login(info: LoginInfo): Observable<UserDetails> {
     if (this.token) {
-      return throwError(new AlreadyLoginError());
+      throw new Error('Already login.');
     }
 
     return this.httpClient.post<CreateTokenResponse>(this.createTokenUrl, <CreateTokenRequest>info).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (error.error instanceof ErrorEvent) {
-          console.error('An error occurred when login: ' + error.error.message);
-          return throwError(new BadNetworkError());
-        } else {
-          console.error('An unknown error occurred when login: ' + error);
+          console.error('An unknown error occurred when login. Error is ', error);
           return throwError(new UnknownError(error));
-        }
       }),
       switchMap(result => {
         if (result.success) {
@@ -106,15 +112,18 @@ export class UserService {
             if (info.rememberMe) {
               this.window.localStorage.setItem(TOKEN_STORAGE_KEY, result.token);
             }
-            this.userInfoSubject.next(result.userInfo);
-            return of(result.userInfo);
+            const userDetails = this.generateUserDetails(result.userInfo);
+            this.userSubject.next(userDetails);
+            return of(userDetails);
           } else {
-            console.error('An error occurred when login: server return wrong data.');
-            return throwError(new ServerLogicError('Token or userInfo is null.'));
+            const e = new ServerLogicError('Create token request succeeded but token or userInfo is null.');
+            console.error(e);
+            return throwError(e);
           }
         } else {
-          console.error('An error occurred when login: wrong credentials.');
-          return throwError(new BadCredentialsError());
+          const e = new BadCredentialsError();
+          console.error(e);
+          return throwError(e);
         }
       })
     );
@@ -127,24 +136,30 @@ export class UserService {
 
     this.window.localStorage.removeItem(TOKEN_STORAGE_KEY);
     this.token = null;
-    this.userInfoSubject.next(null);
+    this.userSubject.next(null);
   }
 
-  // return avartar url
-  getAvartarUrl(username: string): string {
+  generateAvartarUrl(username: string): string {
     if (this.currentUserInfo == null) {
       throw new Error('Not login.');
     }
-    return `${this.api_base_url}user/${username}/avatar?token=${this.token}`;
+    return `${this.apiBaseUrl}user/${username}/avatar?token=${this.token}`;
   }
 
-  getUserInfo(username: string): Observable<UserInfo | null> {
-    return this.httpClient.get<UserInfo>(`${this.api_base_url}user/${username}?token=${this.token}`).pipe(
+  getUserDetails(username: string): Observable<UserDetails | null> {
+    return this.httpClient.get<UserInfo>(`${this.apiBaseUrl}user/${username}?token=${this.token}`).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 404) {
           return of(null);
         } else {
           return throwError(error);
+        }
+      }),
+      map(result => {
+        if (result === null) {
+          return null;
+        } else {
+          return this.generateUserDetails(result)
         }
       })
     );
