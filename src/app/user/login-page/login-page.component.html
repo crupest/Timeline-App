@@ -1,3 +1,5 @@
+<p *ngIf="redirect" class="redirect-message">You have to login first to view the page.</p>
+<div class="w-100"></div>
 <form [formGroup]="form">
   <p *ngIf="message" class="message">{{ message }}</p>
   <label class="input-label">Username</label>

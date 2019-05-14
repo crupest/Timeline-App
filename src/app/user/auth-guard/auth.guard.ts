@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { take, map, tap } from 'rxjs/operators';
 
@@ -11,7 +11,7 @@ export abstract class AuthGuard implements CanActivate {
 
   constructor(protected userService: UserService) { }
 
-  onAuthFailed() { }
+  onAuthFailed(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) { }
 
   abstract get authStrategy(): AuthStrategy;
 
@@ -36,7 +36,7 @@ export abstract class AuthGuard implements CanActivate {
       }
     }), tap(result => {
       if (!result) {
-        this.onAuthFailed();
+        this.onAuthFailed(next, state);
       }
     }));
   }
@@ -49,8 +49,16 @@ export class RequireLoginGuard extends AuthGuard {
   readonly authStrategy: AuthStrategy = 'user';
 
   // never remove this constructor or you will get an injection error.
-  constructor(userService: UserService) {
+  constructor(userService: UserService, private router: Router) {
     super(userService);
+  }
+
+  onAuthFailed(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    this.router.navigate(['login'], {
+      queryParams: {
+        'from': state.url
+      }
+    });
   }
 }
 

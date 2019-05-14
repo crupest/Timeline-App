@@ -159,7 +159,7 @@ export class UserService {
         if (result === null) {
           return null;
         } else {
-          return this.generateUserDetails(result)
+          return this.generateUserDetails(result);
         }
       })
     );

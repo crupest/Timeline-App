@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { UserService } from '../user-service/user.service';
 
-
-export type LoginMessage = string | undefined;
 
 @Component({
   selector: 'app-login-page',
@@ -14,10 +12,16 @@ export type LoginMessage = string | undefined;
 })
 export class LoginPageComponent implements OnInit {
 
-  constructor(private userService: UserService, private router: Router) { }
+  constructor(private userService: UserService, route: ActivatedRoute, private router: Router) {
+    route.queryParamMap.subscribe(map => {
+      this.redirect = map.get('from');
+    });
+  }
 
-  message: LoginMessage;
+  message: string | undefined;
   logining = false;
+
+  redirect: string | null = null;
 
   form = new FormGroup({
     username: new FormControl(''),
@@ -34,7 +38,11 @@ export class LoginPageComponent implements OnInit {
   onLoginButtonClick() {
     this.logining = true;
     this.userService.login(this.form.value).subscribe(_ => {
-      this.router.navigate(['home']);
+      if (this.redirect) {
+        this.router.navigateByUrl(this.redirect);
+      } else {
+        this.router.navigate(['home']);
+      }
     }, (error: Error) => {
       this.message = error.message;
       this.logining = false;

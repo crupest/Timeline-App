@@ -18,7 +18,7 @@ export class UserPageComponent {
   constructor(private userService: UserService, activatedRoute: ActivatedRoute, private router: Router) {
     userService.user$.pipe(take(1)).subscribe(u => {
       if (u == null) {
-        this.state = 'nologin';
+        throw new Error('No login.');
       } else {
         activatedRoute.paramMap.pipe(switchMap(params => {
           const username = params.get('username');
@@ -47,7 +47,7 @@ export class UserPageComponent {
     });
   }
 
-  state: 'loading' | 'nologin' | 'notexist' | 'ok' = 'loading';
+  state: 'loading' | 'notexist' | 'ok' = 'loading';
   isSelf = false;
   username!: string;
   user!: UserDetails;

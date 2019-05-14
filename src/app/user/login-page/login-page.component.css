@@ -1,6 +1,15 @@
 :host {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.redirect-message {
+  color: #e91e63;
 }
 
 form {
