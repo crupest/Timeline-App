@@ -1,7 +1,10 @@
 <p *ngIf="redirect" class="redirect-message">You have to login first to view the page.</p>
 <div class="w-100"></div>
 <form [formGroup]="form">
-  <p *ngIf="message" class="message">{{ message }}</p>
+  <ng-container [ngSwitch]="error">
+    <p id="badcredentialsError" *ngSwitchCase="'badcredentials'" class="error-message">Username or password is wrong.</p>
+    <p id="unknownError" *ngSwitchCase="'unknown'" class="error-message">A unknown error occured.</p>
+  </ng-container>
   <label class="input-label">Username</label>
   <input formControlName="username" type="text" class="input username-input" />
   <label class="input-label">Password</label>

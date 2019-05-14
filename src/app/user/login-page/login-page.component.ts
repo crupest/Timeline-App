@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { UserService } from '../user-service/user.service';
+import { BadCredentialsError } from '../user-service/errors';
 
 
 @Component({
@@ -10,7 +11,7 @@ import { UserService } from '../user-service/user.service';
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.css']
 })
-export class LoginPageComponent implements OnInit {
+export class LoginPageComponent {
 
   constructor(private userService: UserService, route: ActivatedRoute, private router: Router) {
     route.queryParamMap.subscribe(map => {
@@ -18,8 +19,8 @@ export class LoginPageComponent implements OnInit {
     });
   }
 
-  message: string | undefined;
   logining = false;
+  error: 'badcredentials' | 'unknown' | null = null;
 
   redirect: string | null = null;
 
@@ -28,12 +29,6 @@ export class LoginPageComponent implements OnInit {
     password: new FormControl(''),
     rememberMe: new FormControl(false)
   });
-
-  ngOnInit() {
-    if (this.userService.currentUserInfo) {
-      throw new Error('Route error! Already login!');
-    }
-  }
 
   onLoginButtonClick() {
     this.logining = true;
@@ -44,8 +39,12 @@ export class LoginPageComponent implements OnInit {
         this.router.navigate(['home']);
       }
     }, (error: Error) => {
-      this.message = error.message;
       this.logining = false;
+      if (error instanceof BadCredentialsError) {
+        this.error = 'badcredentials';
+      } else {
+        this.error = 'unknown';
+      }
     });
   }
 }
