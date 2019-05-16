@@ -8,14 +8,14 @@ import { delay, switchMap } from 'rxjs/operators';
 
 import { LoginPageComponent } from './login-page.component';
 
-import { createMockUserService } from '../user-service/user.service.mock';
-import { createMockRouter } from 'src/app/test-utilities/router.mock';
+import { createMockUserService } from 'src/app/test/user.service.mock';
+import { createMockRouter } from 'src/app/test/router.mock';
 
 import { UserDetails } from '../entities';
 import { UserService } from '../user-service/user.service';
 import { BadCredentialsError } from '../user-service/errors';
 
-import { MockActivatedRoute } from 'src/app/test-utilities/activated-route.mock';
+import { MockActivatedRoute } from 'src/app/test/activated-route.mock';
 
 describe('UserLoginComponent', () => {
   let component: LoginPageComponent;

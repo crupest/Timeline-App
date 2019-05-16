@@ -13,10 +13,8 @@
     "polyfills.ts"
   ],
   "include": [
-    "test-utilities/**/*",
+    "src/app/test/**/*",
     "**/*.spec.ts",
     "**/*.d.ts",
-    "**/*.mock.ts",
-    "**/*.test.ts"
   ]
 }

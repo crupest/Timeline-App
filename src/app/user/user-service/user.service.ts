@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 import { Observable, throwError, BehaviorSubject, of } from 'rxjs';
-import { catchError, switchMap, tap, filter, map } from 'rxjs/operators';
+import { catchError, switchMap, filter, map } from 'rxjs/operators';
 
 import { LoginInfo, UserDetails } from '../entities';
 import {
@@ -11,7 +11,7 @@ import {
 } from './http-entities';
 
 import { WINDOW, API_BASE_URL } from '../../inject-tokens';
-import { BadCredentialsError, UnknownError, ServerLogicError } from './errors';
+import { BadCredentialsError, BadServerResponseError, AlreadyLoginError, NoLoginError } from './errors';
 
 
 export const TOKEN_STORAGE_KEY = 'token';
@@ -43,25 +43,21 @@ export class UserService {
   }
 
   private verifyToken(token: string): Observable<UserInfo | null> {
-    return this.httpClient.post<VerifyTokenResponse>(this.verifyTokenUrl, <VerifyTokenRequest>{ token: token }).pipe(
-      switchMap(result => {
-        if (result.isValid) {
-          const { userInfo } = result;
-          if (userInfo) {
-            return of(userInfo);
-          } else {
-            return throwError(new ServerLogicError('IsValid is true but UserInfo is null.'));
-          }
+    return this.httpClient.post<VerifyTokenResponse>(
+      this.verifyTokenUrl,
+      <VerifyTokenRequest>{ token: token }
+    ).pipe(switchMap(result => {
+      if (result.isValid) {
+        const { userInfo } = result;
+        if (userInfo) {
+          return of(userInfo);
         } else {
-          return of(null);
+          return throwError(new BadServerResponseError('IsValid is true but UserInfo is null.'));
         }
-      }),
-      tap({
-        error: error => {
-          console.error('Failed to verify token. Error is ', error);
-        }
-      }),
-    );
+      } else {
+        return of(null);
+      }
+    }));
   }
 
   private generateUserDetails(userInfo: UserInfo): UserDetails {
@@ -97,41 +93,35 @@ export class UserService {
 
   login(info: LoginInfo): Observable<UserDetails> {
     if (this.token) {
-      throw new Error('Already login.');
+      throw new AlreadyLoginError();
     }
 
-    return this.httpClient.post<CreateTokenResponse>(this.createTokenUrl, <CreateTokenRequest>info).pipe(
-      catchError((error: HttpErrorResponse) => {
-          console.error('An unknown error occurred when login. Error is ', error);
-          return throwError(new UnknownError(error));
-      }),
-      switchMap(result => {
-        if (result.success) {
-          if (result.token && result.userInfo) {
-            this.token = result.token;
-            if (info.rememberMe) {
-              this.window.localStorage.setItem(TOKEN_STORAGE_KEY, result.token);
-            }
-            const userDetails = this.generateUserDetails(result.userInfo);
-            this.userSubject.next(userDetails);
-            return of(userDetails);
-          } else {
-            const e = new ServerLogicError('Create token request succeeded but token or userInfo is null.');
-            console.error(e);
-            return throwError(e);
+    return this.httpClient.post<CreateTokenResponse>(
+      this.createTokenUrl,
+      <CreateTokenRequest>info
+    ).pipe(switchMap(result => {
+      if (result.success) {
+        if (result.token && result.userInfo) {
+          this.token = result.token;
+          if (info.rememberMe) {
+            this.window.localStorage.setItem(TOKEN_STORAGE_KEY, result.token);
           }
+          const userDetails = this.generateUserDetails(result.userInfo);
+          this.userSubject.next(userDetails);
+          return of(userDetails);
         } else {
-          const e = new BadCredentialsError();
-          console.error(e);
-          return throwError(e);
+          return throwError(new BadServerResponseError(
+            'Create token request succeeded but token or userInfo is null.'));
         }
-      })
-    );
+      } else {
+        return throwError(new BadCredentialsError());
+      }
+    }));
   }
 
   logout() {
     if (this.currentUserInfo === null) {
-      throw new Error('No login now. You can\'t logout.');
+      throw new NoLoginError();
     }
 
     this.window.localStorage.removeItem(TOKEN_STORAGE_KEY);
@@ -141,25 +131,21 @@ export class UserService {
 
   generateAvartarUrl(username: string): string {
     if (this.currentUserInfo == null) {
-      throw new Error('Not login.');
+      throw new NoLoginError();
     }
     return `${this.apiBaseUrl}user/${username}/avatar?token=${this.token}`;
   }
 
   getUserDetails(username: string): Observable<UserDetails | null> {
-    return this.httpClient.get<UserInfo>(`${this.apiBaseUrl}user/${username}?token=${this.token}`).pipe(
+    return this.httpClient.get<UserInfo>(
+      `${this.apiBaseUrl}user/${username}?token=${this.token}`
+    ).pipe(
+      map(result => this.generateUserDetails(result)),
       catchError((error: HttpErrorResponse) => {
         if (error.status === 404) {
           return of(null);
         } else {
           return throwError(error);
-        }
-      }),
-      map(result => {
-        if (result === null) {
-          return null;
-        } else {
-          return this.generateUserDetails(result);
         }
       })
     );

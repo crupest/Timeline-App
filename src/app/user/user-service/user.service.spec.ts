@@ -2,8 +2,8 @@ import { HttpRequest } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed, fakeAsync } from '@angular/core/testing';
 
-import { Mock } from 'src/app/test-utilities/mock';
-import { createMockStorage } from 'src/app/test-utilities/storage.mock';
+import { Mock } from 'src/app/test/mock';
+import { createMockStorage } from 'src/app/test/storage.mock';
 import { WINDOW, API_BASE_URL } from '../../inject-tokens';
 
 import {
