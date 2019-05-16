@@ -44,6 +44,7 @@ export class LoginPageComponent {
         this.error = 'badcredentials';
       } else {
         this.error = 'unknown';
+        console.error(error);
       }
     });
   }

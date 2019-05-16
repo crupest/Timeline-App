@@ -42,7 +42,7 @@ export class UserPageComponent {
             this.user = user;
             this.state = 'ok';
           }
-        });
+        }, error => console.error(error));
       }
     });
   }

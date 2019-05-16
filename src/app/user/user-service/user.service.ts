@@ -92,7 +92,10 @@ export class UserService {
             this.userSubject.next(this.generateUserDetails(userInfo));
           }
         },
-        error: _ => this.userSubject.next(null)
+        error: e => {
+          this.userSubject.next(null);
+          console.error(e);
+        }
       });
     }
   }
