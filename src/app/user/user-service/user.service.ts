@@ -42,6 +42,12 @@ export class UserService {
     this.verifyTokenUrl = apiBaseUrl + kVerifyTokenUrl;
   }
 
+  private checkLogin() {
+    if (this.token === null) {
+      throw new NoLoginError();
+    }
+  }
+
   private verifyToken(token: string): Observable<UserInfo | null> {
     return this.httpClient.post<VerifyTokenResponse>(
       this.verifyTokenUrl,
@@ -64,7 +70,7 @@ export class UserService {
     const t = this;
     return <UserDetails>{
       username: userInfo.username,
-      isAdmin: userInfo.roles.includes('admin'),
+      isAdmin: userInfo.isAdmin,
       get avatarUrl() {
         return t.generateAvartarUrl(this.username);
       }
@@ -120,23 +126,19 @@ export class UserService {
   }
 
   logout() {
-    if (this.currentUserInfo === null) {
-      throw new NoLoginError();
-    }
-
+    this.checkLogin();
     this.window.localStorage.removeItem(TOKEN_STORAGE_KEY);
     this.token = null;
     this.userSubject.next(null);
   }
 
   generateAvartarUrl(username: string): string {
-    if (this.currentUserInfo == null) {
-      throw new NoLoginError();
-    }
+    this.checkLogin();
     return `${this.apiBaseUrl}user/${username}/avatar?token=${this.token}`;
   }
 
   getUserDetails(username: string): Observable<UserDetails | null> {
+    this.checkLogin();
     return this.httpClient.get<UserInfo>(
       `${this.apiBaseUrl}user/${username}?token=${this.token}`
     ).pipe(

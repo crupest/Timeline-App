@@ -3,7 +3,7 @@ export const kVerifyTokenUrl = 'token/verify';
 
 export interface UserInfo {
   username: string;
-  roles: string[];
+  isAdmin: boolean;
 }
 
 export interface CreateTokenRequest {

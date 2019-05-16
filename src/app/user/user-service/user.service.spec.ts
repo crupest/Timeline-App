@@ -39,7 +39,7 @@ describe('UserService', () => {
 
   const mockUserInfo: UserInfo = {
     username: 'user',
-    roles: ['user', 'admin']
+    isAdmin: true
   };
   const mockToken = 'mock-token';
   const mockUserDetails: UserDetails = {
