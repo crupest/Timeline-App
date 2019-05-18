@@ -121,7 +121,7 @@ describe('UserLoginComponent', () => {
     }));
   });
 
-  it('Redirect should work', () => {
+  it('redirect should work', () => {
     const mockRedirectUrl = 'hahaha';
     mockActivatedRoute.pushSnapshotWithData({
       mockQueryParamMap: {

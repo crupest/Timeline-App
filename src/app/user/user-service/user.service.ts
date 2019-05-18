@@ -29,7 +29,7 @@ export class UserService {
   readonly user$: Observable<UserDetails | null> =
     this.userSubject.pipe(filter(value => value !== undefined)) as Observable<UserDetails | null>;
 
-  get currentUserInfo(): UserDetails | null | undefined {
+  get currentUser(): UserDetails | null | undefined {
     return this.userSubject.value;
   }
 

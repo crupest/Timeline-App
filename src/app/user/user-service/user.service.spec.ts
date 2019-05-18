@@ -90,7 +90,7 @@ describe('UserService', () => {
           setupHttpController(controller);
         }
         controller.verify();
-        expect(userService.currentUserInfo).toEqual(expectUserDetails ? mocks.userDetails : null);
+        expect(userService.currentUser).toEqual(expectUserDetails ? mocks.userDetails : null);
       };
     }
 
@@ -133,7 +133,7 @@ describe('UserService', () => {
         ), {
           next: userDetails => {
             expect(userDetails).toEqual(mocks.userDetails);
-            expect(userService.currentUserInfo).toEqual(mocks.userDetails);
+            expect(userService.currentUser).toEqual(mocks.userDetails);
           }
         }
       ));
@@ -146,7 +146,7 @@ describe('UserService', () => {
         ), {
           error: error => {
             expect(error instanceof BadCredentialsError).toBeTruthy();
-            expect(userService.currentUserInfo).toBeUndefined();
+            expect(userService.currentUser).toBeUndefined();
           }
         }
       ));
@@ -157,7 +157,7 @@ describe('UserService', () => {
         {
           error: error => {
             expect(error instanceof HttpErrorResponse).toBeTruthy();
-            expect(userService.currentUserInfo).toBeUndefined();
+            expect(userService.currentUser).toBeUndefined();
           }
         }
       ));
@@ -192,7 +192,7 @@ describe('UserService', () => {
           });
           httpController.verify();
 
-          expect(service.currentUserInfo).toEqual(mocks.userDetails);
+          expect(service.currentUser).toEqual(mocks.userDetails);
           expect(mockLocalStorage.getItem(TOKEN_STORAGE_KEY)).toBe(rememberMe ? mocks.token : null);
         };
       }
@@ -211,7 +211,7 @@ describe('UserService', () => {
         token: mocks.token,
         userInfo: mocks.userInfo
       });
-    expect(userService.currentUserInfo).toEqual(mocks.userDetails);
+    expect(userService.currentUser).toEqual(mocks.userDetails);
     if (rememberMe) {
       expect(mockLocalStorage.getItem(TOKEN_STORAGE_KEY)).toBe(mocks.token);
     }
@@ -222,11 +222,11 @@ describe('UserService', () => {
       const service: UserService = TestBed.get(UserService);
       login(service, true);
       service.logout();
-      expect(service.currentUserInfo).toBeNull();
+      expect(service.currentUser).toBeNull();
       expect(mockLocalStorage.getItem(TOKEN_STORAGE_KEY)).toBeNull();
       login(service, false);
       service.logout();
-      expect(service.currentUserInfo).toBeNull();
+      expect(service.currentUser).toBeNull();
     });
 
     it('no login should throw', () => {
