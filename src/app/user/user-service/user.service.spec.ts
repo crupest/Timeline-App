@@ -14,7 +14,7 @@ import {
   kCreateTokenUrl, kVerifyTokenUrl, CreateTokenRequest,
   CreateTokenResponse, VerifyTokenRequest, VerifyTokenResponse, UserInfo
 } from './http-entities';
-import { AlreadyLoginError, BadCredentialsError } from './errors';
+import { AlreadyLoginError, BadCredentialsError, NoLoginError } from './errors';
 
 import { UserService, TOKEN_STORAGE_KEY } from './user.service';
 
@@ -54,7 +54,6 @@ describe('UserService', () => {
     req.body.password === mocks.createTokenRequest.password;
   const verifyTokenRequestMatcher = (req: HttpRequest<VerifyTokenRequest>): boolean =>
     req.url === mocks.verifyTokenUrl && req.body !== null && req.body.token === mocks.token;
-
 
   let mockLocalStorage: Mock<Storage>;
 
@@ -200,6 +199,99 @@ describe('UserService', () => {
 
       it('remember me should work well', createTest(true));
       it('not remember me should work well', createTest(false));
+    });
+  });
+
+  function login(userService: UserService, rememberMe: boolean = false) {
+    userService.login({ ...mocks.createTokenRequest, rememberMe: rememberMe }).subscribe();
+    const controller = TestBed.get(HttpTestingController) as HttpTestingController;
+    controller.expectOne(createTokenRequestMatcher).flush(
+      <CreateTokenResponse>{
+        success: true,
+        token: mocks.token,
+        userInfo: mocks.userInfo
+      });
+    expect(userService.currentUserInfo).toEqual(mocks.userDetails);
+    if (rememberMe) {
+      expect(mockLocalStorage.getItem(TOKEN_STORAGE_KEY)).toBe(mocks.token);
+    }
+  }
+
+  describe('logout should work', () => {
+    it('basic function should work', () => {
+      const service: UserService = TestBed.get(UserService);
+      login(service, true);
+      service.logout();
+      expect(service.currentUserInfo).toBeNull();
+      expect(mockLocalStorage.getItem(TOKEN_STORAGE_KEY)).toBeNull();
+      login(service, false);
+      service.logout();
+      expect(service.currentUserInfo).toBeNull();
+    });
+
+    it('no login should throw', () => {
+      const service: UserService = TestBed.get(UserService);
+      expect(function () { service.logout(); }).toThrowError(NoLoginError);
+    });
+  });
+
+  describe('generate avatar url should work', () => {
+    it('basic function should work', () => {
+      const service: UserService = TestBed.get(UserService);
+      login(service);
+      const aUsername = 'hahaha';
+      expect(service.generateAvartarUrl(aUsername)).toBe(
+        `${mocks.apiBaseUrl}user/${aUsername}/avatar?token=${mocks.token}`);
+    });
+
+    it('no login should throw', () => {
+      const service: UserService = TestBed.get(UserService);
+      expect(function () { service.generateAvartarUrl('hahaha'); }).toThrowError(NoLoginError);
+    });
+  });
+
+  describe('get user details should work', () => {
+    let controller: HttpTestingController;
+    let service: UserService;
+
+    const aUsername = 'hahaha';
+    const url = `${mocks.apiBaseUrl}user/${aUsername}?token=${mocks.token}`;
+
+    beforeEach(() => {
+      controller = TestBed.get(HttpTestingController);
+      service = TestBed.get(UserService);
+    });
+
+    it('get should work', () => {
+      login(service);
+      const aUserInfo = <UserInfo> {
+        username: aUsername,
+        isAdmin: true
+      };
+      const aUserDetails = <UserDetails> {
+        ...aUserInfo,
+        avatarUrl: `${mocks.apiBaseUrl}user/${aUsername}/avatar?token=${mocks.token}`
+      };
+      service.getUserDetails(aUsername).subscribe(result => {
+        expect(result).toEqual(aUserDetails);
+      });
+      controller.expectOne(url).flush(aUserInfo);
+      controller.verify();
+    });
+
+    it('not exist should work', () => {
+      login(service);
+      service.getUserDetails(aUsername).subscribe(result => {
+        expect(result).toBeNull();
+      });
+      controller.expectOne(url).error(new ErrorEvent('404 error'), {
+        status: 404
+      });
+      controller.verify();
+    });
+
+    it('no login should throw', () => {
+      expect(function () { service.getUserDetails(aUsername); }).toThrowError(NoLoginError);
     });
   });
 });
