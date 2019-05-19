@@ -20,6 +20,7 @@ describe('TodoService', () => {
   it('should work well', () => {
     const service: TodoService = TestBed.get(TodoService);
 
+    /*eslint-disable @typescript-eslint/camelcase*/
     const mockIssueList: IssueResponse = [{
       number: 1,
       title: 'Issue title 1',
@@ -32,6 +33,7 @@ describe('TodoService', () => {
       html_url: 'test_url2',
       pull_request: {}
     }];
+    /*eslint-enable @typescript-eslint/camelcase*/
 
     const mockTodoItemList: TodoItem[] = [{
       number: 1,

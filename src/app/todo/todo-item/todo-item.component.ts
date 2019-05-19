@@ -8,5 +8,5 @@ import { TodoItem } from '../todo-item';
   styleUrls: ['./todo-item.component.css', '../todo-list-color-block.css']
 })
 export class TodoItemComponent {
-  @Input() item!: TodoItem;
+  @Input() public item!: TodoItem;
 }

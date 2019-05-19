@@ -13,7 +13,7 @@ export function createMockStorage(): Mock<Storage> {
       return keys[index];
     },
     clear() {
-      Object.keys(map).forEach(key => delete map.key);
+      Object.keys(map).forEach(key => delete map[key]);
     },
     getItem(key: string): string | null {
       return nullIfUndefined(map[key]);

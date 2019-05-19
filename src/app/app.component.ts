@@ -12,14 +12,14 @@ import { UserService } from './user/user-service/user.service';
 })
 export class AppComponent implements OnInit, OnDestroy {
   // never remove userService because we need it explicit constructing.
-  constructor(private userService: UserService) {
+  public constructor(private userService: UserService) {
   }
 
   private subscription!: Subscription;
-  username: string | null = null;
-  avatarUrl: string | null = null;
+  public username: string | null = null;
+  public avatarUrl: string | null = null;
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.userService.checkSavedLoginState();
     this.subscription = this.userService.user$.subscribe(userInfo => {
       if (userInfo == null) {
@@ -32,7 +32,7 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
+  public ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 }

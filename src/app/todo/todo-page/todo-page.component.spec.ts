@@ -19,7 +19,7 @@ function asyncArray<T>(data: T[]): Observable<T> {
   template: ''
 })
 export class TodoItemStubComponent {
-  @Input() item!: TodoItem;
+  @Input() public item!: TodoItem;
 }
 
 describe('TodoListPageComponent', () => {

@@ -13,24 +13,24 @@ import { BadCredentialsError } from '../user-service/errors';
 })
 export class LoginPageComponent {
 
-  constructor(private userService: UserService, route: ActivatedRoute, private router: Router) {
+  public constructor(private userService: UserService, route: ActivatedRoute, private router: Router) {
     route.queryParamMap.subscribe(map => {
       this.redirect = map.get('from');
     });
   }
 
-  logining = false;
-  error: 'badcredentials' | 'unknown' | null = null;
+  public logining = false;
+  public error: 'badcredentials' | 'unknown' | null = null;
 
-  redirect: string | null = null;
+  public redirect: string | null = null;
 
-  form = new FormGroup({
+  public form = new FormGroup({
     username: new FormControl(''),
     password: new FormControl(''),
     rememberMe: new FormControl(false)
   });
 
-  onLoginButtonClick() {
+  public onLoginButtonClick(): void {
     this.logining = true;
     this.userService.login(this.form.value).subscribe(_ => {
       if (this.redirect) {

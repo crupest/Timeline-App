@@ -20,20 +20,20 @@ export const TOKEN_STORAGE_KEY = 'token';
   providedIn: 'root'
 })
 export class UserService {
-  createTokenUrl: string;
-  verifyTokenUrl: string;
+  private createTokenUrl: string;
+  private verifyTokenUrl: string;
 
   private token: string | null = null;
   private userSubject = new BehaviorSubject<UserDetails | null | undefined>(undefined);
 
-  readonly user$: Observable<UserDetails | null> =
+  public readonly user$: Observable<UserDetails | null> =
     this.userSubject.pipe(filter(value => value !== undefined)) as Observable<UserDetails | null>;
 
-  get currentUser(): UserDetails | null | undefined {
+  public get currentUser(): UserDetails | null | undefined {
     return this.userSubject.value;
   }
 
-  constructor(
+  public constructor(
     @Inject(WINDOW) private window: Window,
     @Inject(API_BASE_URL) private apiBaseUrl: string,
     private httpClient: HttpClient
@@ -42,7 +42,7 @@ export class UserService {
     this.verifyTokenUrl = apiBaseUrl + kVerifyTokenUrl;
   }
 
-  private checkLogin() {
+  private checkLogin(): void {
     if (this.token === null) {
       throw new NoLoginError();
     }
@@ -68,7 +68,7 @@ export class UserService {
 
   private generateUserDetails(userInfo: UserInfo): UserDetails {
     const t = this;
-    return <UserDetails>{
+    return {
       username: userInfo.username,
       isAdmin: userInfo.isAdmin,
       get avatarUrl() {
@@ -77,7 +77,7 @@ export class UserService {
     };
   }
 
-  checkSavedLoginState() {
+  public checkSavedLoginState(): void {
     const savedToken = this.window.localStorage.getItem(TOKEN_STORAGE_KEY);
     if (savedToken === null) {
       this.userSubject.next(null);
@@ -100,7 +100,7 @@ export class UserService {
     }
   }
 
-  login(info: LoginInfo): Observable<UserDetails> {
+  public login(info: LoginInfo): Observable<UserDetails> {
     if (this.token) {
       throw new AlreadyLoginError();
     }
@@ -128,19 +128,19 @@ export class UserService {
     }));
   }
 
-  logout() {
+  public logout(): void {
     this.checkLogin();
     this.window.localStorage.removeItem(TOKEN_STORAGE_KEY);
     this.token = null;
     this.userSubject.next(null);
   }
 
-  generateAvartarUrl(username: string): string {
+  public generateAvartarUrl(username: string): string {
     this.checkLogin();
     return `${this.apiBaseUrl}user/${username}/avatar?token=${this.token}`;
   }
 
-  getUserDetails(username: string): Observable<UserDetails | null> {
+  public getUserDetails(username: string): Observable<UserDetails | null> {
     this.checkLogin();
     return this.httpClient.get<UserInfo>(
       `${this.apiBaseUrl}user/${username}?token=${this.token}`

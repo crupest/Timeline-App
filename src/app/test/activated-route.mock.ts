@@ -9,13 +9,13 @@ export interface ParamMapData { [name: string]: string | string[]; }
 
 class MockParamMap implements ParamMap {
 
-  constructor(private data: ParamMapData) { }
+  public constructor(private data: ParamMapData) { }
 
-  get keys(): string[] {
+  public get keys(): string[] {
     return Object.keys(this.data);
   }
 
-  get(name: string): string | null {
+  public get(name: string): string | null {
     const param = this.data[name];
     if (typeof param === 'string') {
       return param;
@@ -28,7 +28,7 @@ class MockParamMap implements ParamMap {
     return null;
   }
 
-  getAll(name: string): string[] {
+  public getAll(name: string): string[] {
     const param = this.data[name];
     if (typeof param === 'string') {
       return [param];
@@ -38,8 +38,8 @@ class MockParamMap implements ParamMap {
     return [];
   }
 
-  has(name: string): boolean {
-    const param  = this.data[name];
+  public has(name: string): boolean {
+    const param = this.data[name];
     if (param) {
       if (param instanceof Array) {
         return param.length !== 0;
@@ -61,41 +61,41 @@ export class MockActivatedRouteSnapshot implements PartialMock<ActivatedRouteSna
   private paramMapInternal: ParamMap;
   private queryParamMapInternal: ParamMap;
 
-  constructor({ mockParamMap, mockQueryParamMap }: MockActivatedRouteSnapshotCreator = {}) {
+  public constructor({ mockParamMap, mockQueryParamMap }: MockActivatedRouteSnapshotCreator = {}) {
     this.paramMapInternal = new MockParamMap(mockParamMap ? mockParamMap : {});
     this.queryParamMapInternal = new MockParamMap(mockQueryParamMap ? mockQueryParamMap : {});
   }
 
-  get paramMap(): ParamMap {
+  public get paramMap(): ParamMap {
     return this.paramMapInternal;
   }
 
-  get queryParamMap(): ParamMap {
+  public get queryParamMap(): ParamMap {
     return this.queryParamMapInternal;
   }
 }
 
 export class MockActivatedRoute implements PartialMock<ActivatedRoute> {
 
-  snapshot$ = new BehaviorSubject<MockActivatedRouteSnapshot>(new MockActivatedRouteSnapshot());
+  public snapshot$ = new BehaviorSubject<MockActivatedRouteSnapshot>(new MockActivatedRouteSnapshot());
 
-  get paramMap(): Observable<ParamMap> {
+  public get paramMap(): Observable<ParamMap> {
     return this.snapshot$.pipe(map(snapshot => snapshot.paramMap));
   }
 
-  get queryParamMap(): Observable<ParamMap> {
+  public get queryParamMap(): Observable<ParamMap> {
     return this.snapshot$.pipe(map(snapshot => snapshot.queryParamMap));
   }
 
-  get snapshot(): MockActivatedRouteSnapshot {
+  public get snapshot(): MockActivatedRouteSnapshot {
     return this.snapshot$.value;
   }
 
-  pushSnapshot(snapshot: MockActivatedRouteSnapshot) {
+  public pushSnapshot(snapshot: MockActivatedRouteSnapshot): void {
     this.snapshot$.next(snapshot);
   }
 
-  pushSnapshotWithData(snapshotCreator: MockActivatedRouteSnapshotCreator = {}) {
+  public pushSnapshotWithData(snapshotCreator: MockActivatedRouteSnapshotCreator = {}): void {
     this.pushSnapshot(new MockActivatedRouteSnapshot(snapshotCreator));
   }
 }

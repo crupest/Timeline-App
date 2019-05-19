@@ -5,5 +5,5 @@ import { Directive, Input } from '@angular/core';
   selector: '[routerLink]'
 })
 export class RouterLinkStubDirective {
-  @Input('routerLink') linkParams: any;
+  @Input('routerLink') public linkParams: any;
 }

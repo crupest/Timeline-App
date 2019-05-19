@@ -14,7 +14,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./user-page.component.css']
 })
 export class UserPageComponent {
-  constructor(private userService: UserService, activatedRoute: ActivatedRoute, private router: Router) {
+  public constructor(private userService: UserService, activatedRoute: ActivatedRoute, private router: Router) {
     activatedRoute.paramMap.pipe(switchMap(params => {
       const username = params.get('username')!;
       this.username = username;
@@ -30,11 +30,11 @@ export class UserPageComponent {
     }, error => console.error(error));
   }
 
-  isSelf = false;
-  username!: string;
-  user: UserDetails | null | undefined;
+  public isSelf = false;
+  public username!: string;
+  public user: UserDetails | null | undefined;
 
-  logout() {
+  public logout(): void {
     this.userService.logout();
     this.router.navigate(['/']);
   }

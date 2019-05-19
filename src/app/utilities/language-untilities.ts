@@ -11,7 +11,7 @@ export function throwIfNullOrUndefined<T>(value: T | null | undefined,
   }
 }
 
-export function repeat(time: number, action: (index?: number) => void) {
+export function repeat(time: number, action: (index?: number) => void): void {
   for (let i = 0; i < time; i++) {
     action(i);
   }

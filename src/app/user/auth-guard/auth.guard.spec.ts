@@ -6,12 +6,12 @@ import { UserService } from '../user-service/user.service';
 
 describe('AuthGuard', () => {
   class TestAuthGuard extends AuthGuard {
-    constructor(userService: any, strategy: AuthStrategy) {
+    public constructor(userService: any, strategy: AuthStrategy) {
       super(userService as UserService);
       this.authStrategy = strategy;
     }
 
-    readonly authStrategy: AuthStrategy;
+    public readonly authStrategy: AuthStrategy;
   }
 
   const mockUser = <UserDetails>{
@@ -37,7 +37,7 @@ describe('AuthGuard', () => {
       const mockUserService: any = {};
       const guard = new TestAuthGuard(mockUserService, authStrategy);
 
-      function testWith(userDetails: UserDetails | null, r: boolean) {
+      function testWith(userDetails: UserDetails | null, r: boolean): void {
         mockUserService.user$ = of(userDetails);
         const rawResult = guard.canActivate(<any>null, <any>null);
         if (typeof rawResult === 'boolean') {

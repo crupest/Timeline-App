@@ -91,7 +91,7 @@ describe('UserLoginComponent', () => {
   });
 
   describe('error message should display', () => {
-    function createTest(error: any, test: () => void) {
+    function createTest(error: any, test: () => void): () => void {
       return () => {
         fixture.detectChanges();
         const mockValue = {

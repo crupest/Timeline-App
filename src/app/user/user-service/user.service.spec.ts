@@ -179,7 +179,7 @@ describe('UserService', () => {
     });
 
     describe('remember me should work', () => {
-      function createTest(rememberMe: boolean) {
+      function createTest(rememberMe: boolean): () => void {
         return () => {
           const service: UserService = TestBed.get(UserService);
           service.login({ ...mocks.createTokenRequest, rememberMe: rememberMe }).subscribe();
@@ -202,7 +202,7 @@ describe('UserService', () => {
     });
   });
 
-  function login(userService: UserService, rememberMe: boolean = false) {
+  function login(userService: UserService, rememberMe: boolean = false): void {
     userService.login({ ...mocks.createTokenRequest, rememberMe: rememberMe }).subscribe();
     const controller = TestBed.get(HttpTestingController) as HttpTestingController;
     controller.expectOne(createTokenRequestMatcher).flush(
@@ -264,11 +264,11 @@ describe('UserService', () => {
 
     it('get should work', () => {
       login(service);
-      const aUserInfo = <UserInfo> {
+      const aUserInfo = <UserInfo>{
         username: aUsername,
         isAdmin: true
       };
-      const aUserDetails = <UserDetails> {
+      const aUserDetails = <UserDetails>{
         ...aUserInfo,
         avatarUrl: `${mocks.apiBaseUrl}user/${aUsername}/avatar?token=${mocks.token}`
       };

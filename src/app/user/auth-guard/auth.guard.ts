@@ -9,13 +9,13 @@ export type AuthStrategy = 'all' | 'nologin' | 'user' | 'admin';
 
 export abstract class AuthGuard implements CanActivate {
 
-  constructor(protected userService: UserService) { }
+  protected constructor(protected userService: UserService) { }
 
-  onAuthFailed(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) { }
+  public onAuthFailed(_next: ActivatedRouteSnapshot, _state: RouterStateSnapshot): void { }
 
-  abstract get authStrategy(): AuthStrategy;
+  public abstract get authStrategy(): AuthStrategy;
 
-  canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot):
+  public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot):
     Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
     const { authStrategy } = this;
@@ -46,14 +46,14 @@ export abstract class AuthGuard implements CanActivate {
   providedIn: 'root'
 })
 export class RequireLoginGuard extends AuthGuard {
-  readonly authStrategy: AuthStrategy = 'user';
+  public readonly authStrategy: AuthStrategy = 'user';
 
   // never remove this constructor or you will get an injection error.
-  constructor(userService: UserService, private router: Router) {
+  public constructor(userService: UserService, private router: Router) {
     super(userService);
   }
 
-  onAuthFailed(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+  public onAuthFailed(_next: ActivatedRouteSnapshot, state: RouterStateSnapshot): void {
     this.router.navigate(['login'], {
       queryParams: {
         'from': state.url
@@ -66,10 +66,10 @@ export class RequireLoginGuard extends AuthGuard {
   providedIn: 'root'
 })
 export class RequireNoLoginGuard extends AuthGuard {
-  readonly authStrategy: AuthStrategy = 'nologin';
+  public readonly authStrategy: AuthStrategy = 'nologin';
 
   // never remove this constructor or you will get an injection error.
-  constructor(userService: UserService) {
+  public constructor(userService: UserService) {
     super(userService);
   }
 }

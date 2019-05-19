@@ -34,13 +34,13 @@ import { TodoService } from '../todo-service/todo.service';
 })
 export class TodoPageComponent implements OnInit {
 
-  items: TodoItem[] = [];
-  isLoadCompleted = false;
+  public items: TodoItem[] = [];
+  public isLoadCompleted = false;
 
-  constructor(private todoService: TodoService) {
+  public constructor(private todoService: TodoService) {
   }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.todoService.getWorkItemList().subscribe({
       next: result => this.items.push(result),
       complete: () => { this.isLoadCompleted = true; }
