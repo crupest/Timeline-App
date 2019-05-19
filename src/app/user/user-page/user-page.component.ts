@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { throwError, of } from 'rxjs';
+import { of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import { UserDetails } from '../entities';
@@ -16,18 +16,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class UserPageComponent {
   constructor(private userService: UserService, activatedRoute: ActivatedRoute, private router: Router) {
     activatedRoute.paramMap.pipe(switchMap(params => {
-      const username = params.get('username');
-      if (username == null) {
-        return throwError(new Error('No username param in route.'));
-      } else {
-        this.username = username;
-        return of(username);
-      }
-    }), switchMap(username => {
-      const currentUser = userService.currentUser;
-      if (!currentUser) {
-        return throwError(new Error('No login.'));
-      }
+      const username = params.get('username')!;
+      this.username = username;
+      const currentUser = userService.currentUser!;
       if (username === currentUser.username) {
         this.isSelf = true;
         return of(currentUser);
@@ -35,19 +26,13 @@ export class UserPageComponent {
         return userService.getUserDetails(username);
       }
     })).subscribe(user => {
-      if (user === null) {
-        this.state = 'notexist';
-      } else {
         this.user = user;
-        this.state = 'ok';
-      }
     }, error => console.error(error));
   }
 
-  state: 'loading' | 'notexist' | 'ok' = 'loading';
   isSelf = false;
   username!: string;
-  user!: UserDetails;
+  user: UserDetails | null | undefined;
 
   logout() {
     this.userService.logout();

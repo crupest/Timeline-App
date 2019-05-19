@@ -8,14 +8,12 @@ import { delay, switchMap } from 'rxjs/operators';
 
 import { LoginPageComponent } from './login-page.component';
 
-import { createMockUserService } from 'src/app/test/user.service.mock';
-import { createMockRouter } from 'src/app/test/router.mock';
+import { MockActivatedRoute } from 'src/app/test/activated-route.mock';
 
 import { UserDetails } from '../entities';
 import { UserService } from '../user-service/user.service';
 import { BadCredentialsError } from '../user-service/errors';
 
-import { MockActivatedRoute } from 'src/app/test/activated-route.mock';
 
 describe('UserLoginComponent', () => {
   let component: LoginPageComponent;
@@ -25,8 +23,8 @@ describe('UserLoginComponent', () => {
   let mockActivatedRoute: MockActivatedRoute;
 
   beforeEach(async(() => {
-    mockUserService = createMockUserService();
-    mockRouter = createMockRouter();
+    mockUserService = jasmine.createSpyObj('UserService', ['login']);
+    mockRouter = jasmine.createSpyObj('Router', ['navigateByUrl']);
     mockActivatedRoute = new MockActivatedRoute();
 
     TestBed.configureTestingModule({

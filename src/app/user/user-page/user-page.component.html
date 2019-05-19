@@ -1,14 +1,12 @@
-<ng-container [ngSwitch]="state">
-  <p *ngSwitchCase="'loading'">Loading...</p>
-  <p *ngSwitchCase="'notexist'">The user <span class="username">{{username}}</span> does not exits.</p>
-  <div *ngSwitchCase="'ok'" class="container">
-    <div class="user-info">
-      <img [src]="user.avatarUrl" class="avatar">
-      <p>Username: <span class="username">{{user.username}}</span></p>
-      <p>Role: <span *ngIf="user.isAdmin" class="role-admin">administrator</span><span *ngIf="!user.isAdmin"
-          class="role-user">normal user</span></p>
-    </div>
-    <div class="w-100"></div>
-    <button class="logout-button" (click)="logout()">logout</button>
+<p *ngIf="user === undefined">Loading...</p>
+<p *ngIf="user === null">The user <span class="username">{{username}}</span> does not exits.</p>
+<div *ngIf="user" class="container">
+  <div class="user-info">
+    <img [src]="user.avatarUrl" class="avatar">
+    <p>Username: <span class="username">{{user.username}}</span></p>
+    <p>Role: <span *ngIf="user.isAdmin" class="role-admin">administrator</span><span *ngIf="!user.isAdmin"
+        class="role-user">normal user</span></p>
   </div>
-</ng-container>
+  <div class="w-100"></div>
+  <button class="logout-button" (click)="logout()">logout</button>
+</div>
