@@ -1,7 +1,7 @@
 import { ParamMap, ActivatedRouteSnapshot, ActivatedRoute } from '@angular/router';
 
 import { Observable, BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, filter } from 'rxjs/operators';
 
 import { PartialMock } from './mock';
 
@@ -77,7 +77,10 @@ export class MockActivatedRouteSnapshot implements PartialMock<ActivatedRouteSna
 
 export class MockActivatedRoute implements PartialMock<ActivatedRoute> {
 
-  public snapshot$ = new BehaviorSubject<MockActivatedRouteSnapshot>(new MockActivatedRouteSnapshot());
+  private snapshotSubject = new BehaviorSubject<MockActivatedRouteSnapshot | undefined>(undefined);
+  public readonly snapshot$ = this.snapshotSubject.pipe(filter(
+    value => value !== undefined
+  )) as Observable<MockActivatedRouteSnapshot>;
 
   public get paramMap(): Observable<ParamMap> {
     return this.snapshot$.pipe(map(snapshot => snapshot.paramMap));
@@ -87,12 +90,12 @@ export class MockActivatedRoute implements PartialMock<ActivatedRoute> {
     return this.snapshot$.pipe(map(snapshot => snapshot.queryParamMap));
   }
 
-  public get snapshot(): MockActivatedRouteSnapshot {
-    return this.snapshot$.value;
+  public get snapshot(): MockActivatedRouteSnapshot | undefined {
+    return this.snapshotSubject.value;
   }
 
   public pushSnapshot(snapshot: MockActivatedRouteSnapshot): void {
-    this.snapshot$.next(snapshot);
+    this.snapshotSubject.next(snapshot);
   }
 
   public pushSnapshotWithData(snapshotCreator: MockActivatedRouteSnapshotCreator = {}): void {
