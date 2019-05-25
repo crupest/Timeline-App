@@ -12,9 +12,9 @@ import { TodoItem } from '../todo-item';
 })
 export class TodoService {
 
-  constructor(private client: HttpClient) { }
+  public constructor(private client: HttpClient) { }
 
-  getWorkItemList(): Observable<TodoItem> {
+  public getWorkItemList(): Observable<TodoItem> {
     return this.client.get<IssueResponse>(`${githubBaseUrl}/issues`, {
       params: {
         state: 'all'

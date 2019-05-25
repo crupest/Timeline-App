@@ -14,9 +14,9 @@ interface TestComponent {
 })
 class DefaultDebounceTimeTestComponent {
 
-  @ViewChild(DebounceClickDirective) directive!: DebounceClickDirective;
+  @ViewChild(DebounceClickDirective) public directive!: DebounceClickDirective;
 
-  clickHandler: () => void = () => { };
+  public clickHandler: () => void = () => { };
 }
 
 @Component({
@@ -24,18 +24,19 @@ class DefaultDebounceTimeTestComponent {
   template: '<button (appDebounceClick)="clickHandler()" [appDebounceClickTime]="debounceTime"></button>'
 })
 class CustomDebounceTimeTestComponent {
-  debounceTime: number | undefined;
+  public debounceTime: number | undefined;
 
-  @ViewChild(DebounceClickDirective) directive!: DebounceClickDirective;
+  @ViewChild(DebounceClickDirective)
+  public directive!: DebounceClickDirective;
 
-  clickHandler: () => void = () => { };
+  public clickHandler: () => void = () => { };
 }
 
 
 describe('DebounceClickDirective', () => {
   let counter: number;
 
-  function initComponent(component: TestComponent) {
+  function initComponent(component: TestComponent): void {
     component.clickHandler = () => counter++;
   }
 
@@ -65,7 +66,7 @@ describe('DebounceClickDirective', () => {
     });
 
     it('should work well', fakeAsync(() => {
-      function click() {
+      function click(): void {
         (<HTMLButtonElement>componentFixture.debugElement.query(By.css('button')).nativeElement).dispatchEvent(new MouseEvent('click'));
       }
       componentFixture.detectChanges();
@@ -105,7 +106,7 @@ describe('DebounceClickDirective', () => {
     });
 
     it('should work well', fakeAsync(() => {
-      function click() {
+      function click(): void {
         (<HTMLButtonElement>componentFixture.debugElement.query(By.css('button')).nativeElement).dispatchEvent(new MouseEvent('click'));
       }
       componentFixture.detectChanges();

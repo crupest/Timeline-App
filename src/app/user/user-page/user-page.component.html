@@ -1,0 +1,12 @@
+<p id="loadIndicator" *ngIf="user === undefined">Loading...</p>
+<p id="notExistMessage" *ngIf="user === null">The user <span class="username">{{username}}</span> does not exits.</p>
+<div id="userContainer" *ngIf="user" class="container">
+  <div class="user-info">
+    <img [src]="user.avatarUrl" class="avatar">
+    <p>Username: <span class="username">{{user.username}}</span></p>
+    <p>Role: <span *ngIf="user.isAdmin" class="role-admin">administrator</span><span *ngIf="!user.isAdmin"
+        class="role-user">normal user</span></p>
+  </div>
+  <div class="w-100"></div>
+  <button *ngIf="isSelf" class="logout-button" (click)="logout()">logout</button>
+</div>

@@ -10,10 +10,20 @@ import { TodoService } from '../todo-service/todo.service';
   templateUrl: './todo-page.component.html',
   styleUrls: ['./todo-page.component.css', '../todo-list-color-block.css'],
   animations: [
-    trigger('itemEnter', [
+    trigger('leftEnter', [
       transition(':enter', [
         style({
           transform: 'translateX(-100%) translateX(-20px)'
+        }),
+        animate('400ms ease-out', style({
+          transform: 'none'
+        }))
+      ])
+    ]),
+    trigger('rightEnter', [
+      transition(':enter', [
+        style({
+          transform: 'translateX(100%) translateX(20px)'
         }),
         animate('400ms ease-out', style({
           transform: 'none'
@@ -24,13 +34,13 @@ import { TodoService } from '../todo-service/todo.service';
 })
 export class TodoPageComponent implements OnInit {
 
-  items: TodoItem[] = [];
-  isLoadCompleted = false;
+  public items: TodoItem[] = [];
+  public isLoadCompleted = false;
 
-  constructor(private todoService: TodoService) {
+  public constructor(private todoService: TodoService) {
   }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.todoService.getWorkItemList().subscribe({
       next: result => this.items.push(result),
       complete: () => { this.isLoadCompleted = true; }

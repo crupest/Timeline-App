@@ -1,0 +1,51 @@
+:host {
+  display: flex;
+  justify-content: center;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.container {
+  min-width: 250px;
+}
+
+.user-info {
+  overflow: auto;
+  text-align: right;
+}
+
+.avatar {
+  width: 60px;
+  height: 60px;
+  float: left;
+}
+
+p {
+  margin: 0;
+}
+
+.username {
+  color: teal;
+}
+
+.role-admin {
+  color: tomato;
+}
+
+.role-user {
+  color: aquamarine;
+}
+
+.logout-button {
+  display: block;
+  margin-left: auto;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  color: white;
+  font-size: 0.9em;
+  background: red;
+  cursor: pointer;
+}

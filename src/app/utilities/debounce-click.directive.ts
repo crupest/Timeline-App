@@ -9,11 +9,12 @@ export class DebounceClickDirective implements OnInit, OnDestroy {
 
   private subscription: Subscription | undefined;
 
-  @Output('appDebounceClick') clickEvent = new EventEmitter<any>();
+  @Output('appDebounceClick')
+  public clickEvent = new EventEmitter<any>();
 
   // tslint:disable-next-line:no-input-rename
   @Input('appDebounceClickTime')
-  set debounceTime(value: number) {
+  public set debounceTime(value: number) {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
@@ -22,10 +23,10 @@ export class DebounceClickDirective implements OnInit, OnDestroy {
     ).subscribe(o => this.clickEvent.emit(o));
   }
 
-  constructor(private element: ElementRef) {
+  public constructor(private element: ElementRef) {
   }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     if (!this.subscription) {
       this.subscription = fromEvent(<HTMLElement>this.element.nativeElement, 'click').pipe(
         debounceTime(500)
@@ -33,7 +34,7 @@ export class DebounceClickDirective implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy() {
+  public ngOnDestroy(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
