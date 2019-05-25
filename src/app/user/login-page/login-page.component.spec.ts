@@ -24,7 +24,7 @@ describe('UserLoginComponent', () => {
 
   beforeEach(async(() => {
     mockUserService = jasmine.createSpyObj('UserService', ['login']);
-    mockRouter = jasmine.createSpyObj('Router', ['navigateByUrl']);
+    mockRouter = jasmine.createSpyObj('Router', ['navigate', 'navigateByUrl']);
     mockActivatedRoute = new MockActivatedRoute();
 
     TestBed.configureTestingModule({
@@ -108,7 +108,7 @@ describe('UserLoginComponent', () => {
       };
     }
 
-    it('unknown should work', createTest({name: 'unknown error'}, () => {
+    it('unknown should work', createTest(new Error(), () => {
       expect(component.error).toBe('unknown');
       expect(fixture.debugElement.query(By.css('p#unknownError'))).toBeTruthy();
     }));
@@ -151,7 +151,7 @@ describe('UserLoginComponent', () => {
       rememberMe: true
     };
 
-    mockUserService.login.withArgs(mockValue).and.returnValue(of(<any>null).pipe(delay(200), switchMap(_ => throwError({name: 'unknown error'}))));
+    mockUserService.login.withArgs(mockValue).and.returnValue(of(<any>null).pipe(delay(200), switchMap(_ => throwError(new Error()))));
 
     component.form.setValue(mockValue);
     component.onLoginButtonClick();
