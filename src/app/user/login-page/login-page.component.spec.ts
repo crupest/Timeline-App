@@ -24,7 +24,7 @@ describe('UserLoginComponent', () => {
 
   beforeEach(async(() => {
     mockUserService = jasmine.createSpyObj('UserService', ['login']);
-    mockRouter = jasmine.createSpyObj('Router', ['navigateByUrl']);
+    mockRouter = jasmine.createSpyObj('Router', ['navigate', 'navigateByUrl']);
     mockActivatedRoute = new MockActivatedRoute();
 
     TestBed.configureTestingModule({
