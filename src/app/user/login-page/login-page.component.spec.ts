@@ -108,7 +108,7 @@ describe('UserLoginComponent', () => {
       };
     }
 
-    it('unknown should work', createTest(new Error(), () => {
+    it('unknown should work', createTest({name: 'unknown error'}, () => {
       expect(component.error).toBe('unknown');
       expect(fixture.debugElement.query(By.css('p#unknownError'))).toBeTruthy();
     }));
@@ -151,7 +151,7 @@ describe('UserLoginComponent', () => {
       rememberMe: true
     };
 
-    mockUserService.login.withArgs(mockValue).and.returnValue(of(<any>null).pipe(delay(200), switchMap(_ => throwError(new Error()))));
+    mockUserService.login.withArgs(mockValue).and.returnValue(of(<any>null).pipe(delay(200), switchMap(_ => throwError({name: 'unknown error'}))));
 
     component.form.setValue(mockValue);
     component.onLoginButtonClick();
