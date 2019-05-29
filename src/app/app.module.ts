@@ -12,6 +12,9 @@ import { UserModule } from './user/user.module';
 
 import { WINDOW, API_BASE_URL } from './inject-tokens';
 
+export const apiBaseUrl = environment.production ?
+  'https://api.crupest.xyz/' : 'http://localhost:5000/';
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -23,10 +26,7 @@ import { WINDOW, API_BASE_URL } from './inject-tokens';
   ],
   providers: [
     { provide: WINDOW, useValue: window },
-    {
-      provide: API_BASE_URL, useValue: environment.production ?
-        'https://api.crupest.xyz/' : 'http://localhost:5000/'
-    }
+    { provide: API_BASE_URL, useValue: apiBaseUrl }
   ],
   bootstrap: [AppComponent]
 })
