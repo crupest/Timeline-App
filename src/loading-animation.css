@@ -23,9 +23,7 @@
 }
 
 .loading-animation-container {
-  position: absolute;
-  width: 100px;
-  height: 100px;
+  position: relative;
   animation: loading-animation-container-animation 9s infinite;
   transform-origin: center;
 }

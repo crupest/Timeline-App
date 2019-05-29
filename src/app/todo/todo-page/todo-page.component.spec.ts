@@ -10,6 +10,8 @@ import { TodoItem } from '../todo-item';
 import { TodoPageComponent } from './todo-page.component';
 import { TodoService } from '../todo-service/todo.service';
 
+import { LoadingStubComponent } from '../../test/component-stubs/loading.component.stub';
+
 function asyncArray<T>(data: T[]): Observable<T> {
   return from(data).pipe(delay(0));
 }
@@ -47,7 +49,7 @@ describe('TodoListPageComponent', () => {
     mockTodoService.getWorkItemList.and.returnValue(asyncArray(mockTodoItems));
 
     TestBed.configureTestingModule({
-      declarations: [TodoPageComponent, TodoItemStubComponent],
+      declarations: [TodoPageComponent, TodoItemStubComponent, LoadingStubComponent],
       imports: [NoopAnimationsModule],
       providers: [{ provide: TodoService, useValue: mockTodoService }]
     }).compileComponents();

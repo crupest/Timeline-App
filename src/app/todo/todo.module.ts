@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { TodoItemComponent } from './todo-item/todo-item.component';
 import { TodoPageComponent } from './todo-page/todo-page.component';
+import { UtilityModule } from '../utilities/utility.module';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import { TodoPageComponent } from './todo-page/todo-page.component';
   ],
   imports: [
     CommonModule, HttpClientModule, BrowserAnimationsModule,
+    UtilityModule,
     RouterModule.forChild([
       { path: 'todo', component: TodoPageComponent }
     ])

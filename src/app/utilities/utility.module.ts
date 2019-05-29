@@ -2,10 +2,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { DebounceClickDirective } from './debounce-click.directive';
+import { LoadingComponent } from './loading/loading.component';
 
 @NgModule({
-  declarations: [DebounceClickDirective],
+  declarations: [DebounceClickDirective, LoadingComponent],
   imports: [CommonModule],
-  exports: [DebounceClickDirective]
+  exports: [DebounceClickDirective, LoadingComponent]
 })
 export class UtilityModule { }

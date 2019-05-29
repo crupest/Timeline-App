@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserModule } from '@angular/platform-browser';
 
 import { environment } from '../environments/environment';
 
@@ -18,7 +18,7 @@ export const apiBaseUrl = environment.production ?
 @NgModule({
   declarations: [AppComponent],
   imports: [
-    BrowserAnimationsModule,
+    BrowserModule,
     HomeModule, TodoModule, UserModule,
     RouterModule.forRoot([
       { path: '', redirectTo: '/home', pathMatch: 'full' },
