@@ -1,4 +1,4 @@
-<div id="loadingIndicator" *ngIf="!isLoadCompleted">loading</div>
+<app-loading id="loadingIndicator" *ngIf="!isLoadCompleted" size="100px" [center]="true"></app-loading>
 <div id="pageBody" *ngIf="isLoadCompleted">
   <div @rightEnter class="sample-box">
     <div class="sample-item">

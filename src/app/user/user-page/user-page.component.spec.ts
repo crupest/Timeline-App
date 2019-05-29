@@ -1,13 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router, ActivatedRoute } from '@angular/router';
+import { By } from '@angular/platform-browser';
 
+import { of } from 'rxjs';
+
+import { UserDetails } from '../entities';
 import { UserPageComponent } from './user-page.component';
 import { UserService } from '../user-service/user.service';
 
 import { MockActivatedRoute } from 'src/app/test/activated-route.mock';
-import { By } from '@angular/platform-browser';
-import { UserDetails } from '../entities';
-import { of } from 'rxjs';
+import { LoadingStubComponent } from 'src/app/test/component-stubs/loading.component.stub';
 
 describe('UserPageComponent', () => {
   let component: UserPageComponent;
@@ -36,14 +38,13 @@ describe('UserPageComponent', () => {
     mockActivatedRoute = new MockActivatedRoute();
     mockRouter = jasmine.createSpyObj<Router>('Router', ['navigate']);
     TestBed.configureTestingModule({
-      declarations: [UserPageComponent],
+      declarations: [UserPageComponent, LoadingStubComponent],
       providers: [
         { provide: UserService, useValue: mockUserService },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: Router, useValue: mockRouter }
       ]
-    })
-      .compileComponents();
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -76,13 +77,10 @@ describe('UserPageComponent', () => {
   });
 
   describe('user info part should work', () => {
-
     function testInfoPart(userDetails: UserDetails): void {
       expect(fixture.debugElement.query(By.css('#userContainer'))).toBeTruthy();
-      expect((fixture.debugElement.query(By.css('img.avatar')).nativeElement as HTMLImageElement)
-        .src).toBe(userDetails.avatarUrl);
-      expect((fixture.debugElement.query(By.css('span.username')).nativeElement as HTMLSpanElement)
-        .textContent).toBe(userDetails.username);
+      expect((fixture.debugElement.query(By.css('img.avatar')).nativeElement as HTMLImageElement).src).toBe(userDetails.avatarUrl);
+      expect((fixture.debugElement.query(By.css('span.username')).nativeElement as HTMLSpanElement).textContent).toBe(userDetails.username);
       if (userDetails.isAdmin) {
         expect(fixture.debugElement.query(By.css('span.role-admin'))).toBeTruthy();
       } else {
@@ -108,8 +106,7 @@ describe('UserPageComponent', () => {
     });
 
     it('other and user role should work', () => {
-      mockUserService.getUserDetails.withArgs(mockUserDetails2.username)
-        .and.returnValue(of(mockUserDetails2));
+      mockUserService.getUserDetails.withArgs(mockUserDetails2.username).and.returnValue(of(mockUserDetails2));
       mockActivatedRoute.pushSnapshotWithData({
         mockParamMap: {
           username: mockUserDetails2.username

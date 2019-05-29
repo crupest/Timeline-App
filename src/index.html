@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <title>Timeline</title>
@@ -8,7 +9,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
+
 <body>
-  <app-root>Loading...</app-root>
+  <app-root>
+    <div style="width: 100vw;height: 100vh;display: flex;align-items: center;justify-content: center;">
+      <div class="loading-animation-container" style="width: 100px;height: 100px;">
+        <svg class="loading-animation-part loading-animation-part-1" viewBox="0 0 100 100">
+          <path fill="#009688" d="M50,50 L6.70,75 A50,50 120 0,1 50,0 z"></path>
+        </svg>
+        <svg class="loading-animation-part loading-animation-part-2" viewBox="0 0 100 100">
+          <path fill="#ff9800" d="M50,50 L50,0 A50,50 120 0,1 93.3,75 z"></path>
+        </svg>
+        <svg class="loading-animation-part loading-animation-part-3" viewBox="0 0 100 100">
+          <path fill="#673ab7" d="M50,50 L93.30,75 A50,50 120 0,1 6.70,75 z"></path>
+        </svg>
+      </div>
+    </div>
+  </app-root>
 </body>
+
 </html>

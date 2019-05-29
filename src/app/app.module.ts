@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserModule } from '@angular/platform-browser';
 
 import { environment } from '../environments/environment';
 
@@ -12,10 +12,13 @@ import { UserModule } from './user/user.module';
 
 import { WINDOW, API_BASE_URL } from './inject-tokens';
 
+export const apiBaseUrl = environment.production ?
+  'https://api.crupest.xyz/' : 'http://localhost:5000/';
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
-    BrowserAnimationsModule,
+    BrowserModule,
     HomeModule, TodoModule, UserModule,
     RouterModule.forRoot([
       { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -23,10 +26,7 @@ import { WINDOW, API_BASE_URL } from './inject-tokens';
   ],
   providers: [
     { provide: WINDOW, useValue: window },
-    {
-      provide: API_BASE_URL, useValue: environment.production ?
-        'https://api.crupest.xyz/' : 'http://localhost:5000/'
-    }
+    { provide: API_BASE_URL, useValue: apiBaseUrl }
   ],
   bootstrap: [AppComponent]
 })
