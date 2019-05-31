@@ -44,26 +44,24 @@ label.input-label {
   user-select: none;
 }
 
-#rememberMeCheckBox + label::before {
-  content: '';
+#rememberMeCheckBox + label div {
   border: solid darkslategray 1px;
   border-radius: 3px;
-  width: 0.8em;
-  height: 0.8em;
+  width: 1em;
+  height: 1em;
   cursor: pointer;
 }
 
-#rememberMeCheckBox:checked + label::before {
-  content: '';
-  border-radius: 3px;
-  width: 0.8em;
-  height: 0.8em;
-  border: solid darkslategray 1px;
-  border-radius: 3px;
+#rememberMeCheckBox:checked + label div {
   background-color: green;
-  background-image: url('/assets/check.svg');
-  background-size: contain;
-  cursor: pointer;
+}
+
+#rememberMeCheckBox + label div app-material-icon {
+  display: none;
+}
+
+#rememberMeCheckBox:checked + label div app-material-icon {
+  display: unset;
 }
 
 .login-button {
