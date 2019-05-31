@@ -11,3 +11,10 @@
 .item-detail-link {
   text-decoration: none;
 }
+
+.item-detail-link-icon {
+  color: black;
+  display: inline-flex;
+  vertical-align: middle;
+  font-size:24px;
+}

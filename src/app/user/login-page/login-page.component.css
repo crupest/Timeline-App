@@ -47,8 +47,7 @@ label.input-label {
 #rememberMeCheckBox + label div {
   border: solid darkslategray 1px;
   border-radius: 3px;
-  width: 1em;
-  height: 1em;
+  font-size: 0.86em;
   cursor: pointer;
 }
 
@@ -57,11 +56,11 @@ label.input-label {
 }
 
 #rememberMeCheckBox + label div app-material-icon {
-  display: none;
+  visibility: hidden;
 }
 
 #rememberMeCheckBox:checked + label div app-material-icon {
-  display: unset;
+  visibility: visible;
 }
 
 .login-button {
