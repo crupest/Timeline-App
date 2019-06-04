@@ -2,18 +2,13 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { environment } from '../environments/environment';
-
 import { AppComponent } from './app.component';
 
 import { TodoModule } from './todo/todo.module';
 import { HomeModule } from './home/home.module';
 import { UserModule } from './user/user.module';
 
-import { WINDOW, API_BASE_URL } from './inject-tokens';
-
-export const apiBaseUrl = environment.production ?
-  'https://api.crupest.xyz/' : 'http://localhost:5000/';
+import { WINDOW } from './inject-tokens';
 
 @NgModule({
   declarations: [AppComponent],
@@ -25,8 +20,7 @@ export const apiBaseUrl = environment.production ?
     ])
   ],
   providers: [
-    { provide: WINDOW, useValue: window },
-    { provide: API_BASE_URL, useValue: apiBaseUrl }
+    { provide: WINDOW, useValue: window }
   ],
   bootstrap: [AppComponent]
 })
