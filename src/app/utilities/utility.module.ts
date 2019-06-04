@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 
 import { DebounceClickDirective } from './debounce-click.directive';
 import { LoadingComponent } from './loading/loading.component';
+import { MaterialIconComponent } from './material-icon/material-icon.component';
 
 @NgModule({
-  declarations: [DebounceClickDirective, LoadingComponent],
+  declarations: [DebounceClickDirective, LoadingComponent, MaterialIconComponent],
   imports: [CommonModule],
-  exports: [DebounceClickDirective, LoadingComponent]
+  exports: [DebounceClickDirective, LoadingComponent, MaterialIconComponent]
 })
 export class UtilityModule { }

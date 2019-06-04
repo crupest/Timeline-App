@@ -41,6 +41,6 @@ describe('TodoItemComponent', () => {
   });
 
   it('should set detail link', () => {
-    expect(fixture.debugElement.query(By.css('a.item-detail-button')).properties['href']).toBe(mockTodoItem.detailUrl);
+    expect(fixture.debugElement.query(By.css('a.item-detail-link')).properties['href']).toBe(mockTodoItem.detailUrl);
   });
 });

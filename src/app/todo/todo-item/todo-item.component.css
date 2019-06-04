@@ -8,13 +8,13 @@
   flex: 0 0 auto;
 }
 
-.item-body {
-  display: flex;
-  align-items: center;
+.item-detail-link {
+  text-decoration: none;
 }
 
-.item-detail-button {
-  text-decoration-line: none;
-  display: flex;
-  align-content: center;
+.item-detail-link-icon {
+  color: black;
+  display: inline-flex;
+  vertical-align: middle;
+  font-size:24px;
 }

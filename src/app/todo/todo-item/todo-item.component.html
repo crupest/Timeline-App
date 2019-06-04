@@ -1,6 +1,8 @@
 <span class="item-color-block" [class.color-block-closed]="item.isClosed"
   [class.color-block-opened]="!item.isClosed"></span>
-<div class="item-body">
+<div>
   <span class="item-title">{{ item.number }}. {{ item.title }}</span>
-  <a class="item-detail-button" [href]="item.detailUrl"><img src="assets/goto.svg"></a>
+  <a class="item-detail-link" [href]="item.detailUrl">
+    <app-material-icon class="item-detail-link-icon">arrow_forward</app-material-icon>
+  </a>
 </div>
