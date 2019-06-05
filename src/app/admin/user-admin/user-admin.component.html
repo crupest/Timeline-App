@@ -1,22 +1,25 @@
-<div class="action-bar">
-  <span class="fill-remain"></span>
-  <cru-icon-button>add</cru-icon-button>
-</div>
-<table>
-  <thead>
-    <tr>
-      <th>username</th>
-      <th>admin</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let user of users">
-      <th class="username">{{ user.username }}</th>
-      <th class="isAdmin"><cru-mat-icon *ngIf="user.isAdmin">check</cru-mat-icon></th>
-      <th>
-        <button class="action-button" cruButton="dangerous">change password</button>
-        <button class="action-button" cruButton="dangerous">delete</button>
-      </th>
-    </tr>
-  </tbody>
-</table>
+<cru-loading *ngIf="!users;else realContent"></cru-loading>
+<ng-template #realContent>
+  <div class="action-bar">
+    <span class="fill-remain"></span>
+    <cru-icon-button>add</cru-icon-button>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>username</th>
+        <th>admin</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <th class="username">{{ user.username }}</th>
+        <th class="isAdmin"><cru-mat-icon *ngIf="user.isAdmin">check</cru-mat-icon></th>
+        <th>
+          <button class="action-button" cruButton="dangerous">change password</button>
+          <button class="action-button" cruButton="dangerous">delete</button>
+        </th>
+      </tr>
+    </tbody>
+  </table>
+</ng-template>

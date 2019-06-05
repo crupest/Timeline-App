@@ -1,20 +1,7 @@
 import { Component } from '@angular/core';
 
-export interface User {
-  username: string;
-  isAdmin: boolean;
-}
-
-const mockUsers: User[] = [
-  {
-    username: "user1",
-    isAdmin: true
-  },
-  {
-    username: "useruseruseruser2",
-    isAdmin: false
-  }
-];
+import { UserInfo } from './entity';
+import { UserAdminService } from './user-admin.service';
 
 @Component({
   selector: 'app-user-admin',
@@ -22,5 +9,11 @@ const mockUsers: User[] = [
   styleUrls: ['./user-admin.component.css']
 })
 export class UserAdminComponent {
-  public users: User[] = mockUsers;
+  public constructor(private service: UserAdminService) {
+    service.getUserList().subscribe(next => {
+      this.users = next;
+    });
+  }
+
+  public users: UserInfo[] | undefined;
 }
