@@ -49,18 +49,20 @@ label.input-label {
   border-radius: 3px;
   font-size: 0.86em;
   cursor: pointer;
+  line-height: 1;
 }
 
 #rememberMeCheckBox:checked + label div {
   background-color: green;
 }
 
-#rememberMeCheckBox + label div app-material-icon {
+#rememberMeCheckBox + label div cru-mat-icon {
   visibility: hidden;
 }
 
-#rememberMeCheckBox:checked + label div app-material-icon {
+#rememberMeCheckBox:checked + label div cru-mat-icon {
   visibility: visible;
+  color: white;
 }
 
 .login-button {

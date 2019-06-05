@@ -3,7 +3,9 @@
 @import url('loading-animation.css');
 @import url('https://fonts.googleapis.com/css?family=Noto+Sans|Noto+Sans+SC');
 
-html {
+html,
+button,
+input {
   font-family: 'Noto Sans', 'Noto Sans SC', sans-serif;
 }
 

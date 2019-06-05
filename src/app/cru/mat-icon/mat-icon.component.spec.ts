@@ -2,25 +2,25 @@ import { Component } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { MaterialIconComponent } from './material-icon.component';
+import { CruMatIconComponent } from './mat-icon.component';
 
 @Component({
-  template: '<app-material-icon>check</app-material-icon>'
+  template: '<cru-mat-icon>check</cru-mat-icon>'
 })
 export class MaterialIconTestComponent {}
 
 describe('MaterialIconComponent', () => {
-  let component: MaterialIconComponent;
-  let fixture: ComponentFixture<MaterialIconComponent>;
+  let component: CruMatIconComponent;
+  let fixture: ComponentFixture<CruMatIconComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [MaterialIconComponent, MaterialIconTestComponent]
+      declarations: [CruMatIconComponent, MaterialIconTestComponent]
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MaterialIconComponent);
+    fixture = TestBed.createComponent(CruMatIconComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

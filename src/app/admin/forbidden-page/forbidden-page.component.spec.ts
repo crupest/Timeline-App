@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ForbiddenComponent } from './forbidden.component';
+import { ForbiddenPageComponent } from './forbidden-page.component';
 
 describe('ForbiddenComponent', () => {
-  let component: ForbiddenComponent;
-  let fixture: ComponentFixture<ForbiddenComponent>;
+  let component: ForbiddenPageComponent;
+  let fixture: ComponentFixture<ForbiddenPageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ForbiddenComponent ]
+      declarations: [ ForbiddenPageComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ForbiddenComponent);
+    fixture = TestBed.createComponent(ForbiddenPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

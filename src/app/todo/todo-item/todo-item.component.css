@@ -8,13 +8,19 @@
   flex: 0 0 auto;
 }
 
+.item-title {
+  vertical-align: middle;
+}
+
 .item-detail-link {
+  display: inline-block;
+  line-height: 1;
   text-decoration: none;
+  vertical-align: middle;
 }
 
 .item-detail-link-icon {
+  vertical-align: top;
   color: black;
-  display: inline-flex;
-  vertical-align: middle;
   font-size:24px;
 }

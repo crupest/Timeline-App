@@ -2,22 +2,22 @@ import { DebugElement } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { LoadingComponent } from './loading.component';
+import { CruLoadingComponent } from './loading.component';
 
 describe('LoadingComponent', () => {
-  let component: LoadingComponent;
-  let fixture: ComponentFixture<LoadingComponent>;
+  let component: CruLoadingComponent;
+  let fixture: ComponentFixture<CruLoadingComponent>;
   let animationContainer: DebugElement;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LoadingComponent ]
+      declarations: [ CruLoadingComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LoadingComponent);
+    fixture = TestBed.createComponent(CruLoadingComponent);
     component = fixture.componentInstance;
     animationContainer = fixture.debugElement.query(By.css('.loading-animation-container'));
     fixture.detectChanges();

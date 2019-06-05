@@ -1,3 +1,18 @@
-<p>
-  user-admin works!
-</p>
+<div class="action-bar">
+  <span class="fill-remain"></span>
+  <cru-icon-button>add</cru-icon-button>
+</div>
+<table>
+  <thead>
+    <tr>
+      <th>username</th>
+      <th>admin</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of users">
+      <th>{{ user.username }}</th>
+      <th>{{ user.isAdmin }}</th>
+    </tr>
+  </tbody>
+</table>

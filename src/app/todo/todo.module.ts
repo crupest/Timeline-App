@@ -4,24 +4,20 @@ import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { CruModule } from '../cru/cru.module';
+
 import { TodoItemComponent } from './todo-item/todo-item.component';
 import { TodoPageComponent } from './todo-page/todo-page.component';
-import { UtilityModule } from '../utilities/utility.module';
 
 @NgModule({
-  declarations: [
-    TodoItemComponent,
-    TodoPageComponent
-  ],
+  declarations: [TodoItemComponent, TodoPageComponent],
   imports: [
-    CommonModule, HttpClientModule, BrowserAnimationsModule,
-    UtilityModule,
-    RouterModule.forChild([
-      { path: 'todo', component: TodoPageComponent }
-    ])
+    CommonModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
+    CruModule,
+    RouterModule.forChild([{ path: 'todo', component: TodoPageComponent }])
   ],
-  exports: [
-    RouterModule
-  ]
+  exports: [RouterModule]
 })
-export class TodoModule { }
+export class TodoModule {}

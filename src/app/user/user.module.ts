@@ -4,10 +4,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
-import { RequireNoLoginGuard, RequireLoginGuard } from './auth-guard/auth.guard';
+import { CruModule } from '../cru/cru.module';
+
 import { LoginPageComponent } from './login-page/login-page.component';
 import { UserPageComponent } from './user-page/user-page.component';
-import { UtilityModule } from '../utilities/utility.module';
+
+import { RequireNoLoginGuard, RequireLoginGuard } from './auth-guard/auth.guard';
 
 @NgModule({
   declarations: [LoginPageComponent, UserPageComponent],
@@ -17,7 +19,7 @@ import { UtilityModule } from '../utilities/utility.module';
       { path: 'user/:username', canActivate: [RequireLoginGuard], component: UserPageComponent}
     ]),
     CommonModule, HttpClientModule, ReactiveFormsModule,
-    UtilityModule
+    CruModule
   ],
   exports: [RouterModule],
 })

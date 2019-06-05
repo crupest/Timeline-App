@@ -1,3 +1,10 @@
-<p>
-  admin-page works!
-</p>
+<aside>
+  <h2>Admin</h2>
+  <ul>
+    <li><a class="admin-item" routerLink="user" routerLinkActive="active-admin-item"><cru-mat-icon>account_box</cru-mat-icon>Users</a></li>
+    <li><a class="admin-item" ><cru-mat-icon>more_horiz</cru-mat-icon>More</a></li>
+  </ul>
+</aside>
+<div class="main">
+  <router-outlet></router-outlet>
+</div>

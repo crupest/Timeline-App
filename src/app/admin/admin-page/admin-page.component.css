@@ -1,0 +1,63 @@
+:host {
+  display: flex;
+}
+
+aside {
+  width: 200px;
+  flex: 0 0 auto;
+  background: #a6ffebad;
+}
+
+h2 {
+  margin: 10px 5px;
+}
+
+aside ul {
+  margin: 0;
+  padding: 0;
+}
+
+aside ul li {
+  list-style: none;
+}
+
+.admin-item {
+  display: block;
+  color: #686868;
+  font-size: 1em;
+  text-decoration: none;
+  padding: 5px 10px;
+}
+
+.admin-item cru-mat-icon {
+  font-size: 1.4em;
+  vertical-align: top;
+}
+
+.active-admin-item {
+  background: #fdb228;
+  color: white;
+}
+
+.main {
+  flex: 1 1 auto;
+}
+
+@media (max-width: 767.98px) {
+  h2 {
+    display: none;
+  }
+
+  :host {
+    flex-wrap: wrap;
+  }
+
+  aside {
+    width: 100%;
+  }
+
+  .main {
+    width: 100%;
+  }
+}
+
