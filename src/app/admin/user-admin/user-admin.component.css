@@ -1,6 +1,7 @@
 :host {
   display: block;
   padding: 10px;
+  overflow: scroll;
 }
 
 .action-bar {
@@ -11,14 +12,35 @@
   flex: 1 1 auto;
 }
 
-
-
 table {
   border-spacing: 0;
-  border: 0.5px solid black;
 }
 
 th {
+  padding: 0;
+}
+
+tbody {
+  border: 0.5px solid black;
+}
+
+tbody th {
   border: 0.5px solid black;
   font-weight: normal;
+}
+
+.username {
+  color: #1e92ff;
+}
+
+.isAdmin {
+  color: red;
+}
+
+cru-mat-icon {
+  vertical-align: top;
+}
+
+.action-button {
+  margin: 2px 5px;
 }

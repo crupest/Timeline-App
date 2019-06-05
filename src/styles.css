@@ -3,6 +3,8 @@
 @import url('loading-animation.css');
 @import url('https://fonts.googleapis.com/css?family=Noto+Sans|Noto+Sans+SC');
 
+@import url('./app/cru/button/button.css');
+
 html,
 button,
 input {
