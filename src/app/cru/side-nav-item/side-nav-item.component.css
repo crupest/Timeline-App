@@ -1,0 +1,31 @@
+:host {
+  display: block;
+}
+
+a {
+  display: block;
+  padding: 5px 10px;
+  color: #808080;
+  background: #fbe8b1;
+  font-size: 1em;
+  text-decoration: none;
+  transition: all 0.33s;
+}
+
+a:hover {
+  background: #f5cc4c;
+}
+
+a:active {
+  background: #f1b606;
+}
+
+.active {
+  background: #f08600!important;
+  color: white;
+}
+
+::ng-deep cru-mat-icon {
+  font-size: 1.4em;
+  vertical-align: top;
+}

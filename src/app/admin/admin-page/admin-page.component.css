@@ -2,41 +2,13 @@
   display: flex;
 }
 
-aside {
+cru-side-nav {
   width: 200px;
   flex: 0 0 auto;
-  background: #a6ffebad;
 }
 
 h2 {
   margin: 10px 5px;
-}
-
-aside ul {
-  margin: 0;
-  padding: 0;
-}
-
-aside ul li {
-  list-style: none;
-}
-
-.admin-item {
-  display: block;
-  color: #686868;
-  font-size: 1em;
-  text-decoration: none;
-  padding: 5px 10px;
-}
-
-.admin-item cru-mat-icon {
-  font-size: 1.4em;
-  vertical-align: top;
-}
-
-.active-admin-item {
-  background: #fdb228;
-  color: white;
 }
 
 .main {
@@ -52,7 +24,7 @@ aside ul li {
     flex-wrap: wrap;
   }
 
-  aside {
+  cru-side-nav {
     width: 100%;
   }
 
