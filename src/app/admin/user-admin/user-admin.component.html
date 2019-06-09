@@ -13,12 +13,12 @@
     </thead>
     <tbody>
       <tr *ngFor="let user of users">
-        <th class="username">{{ user.username }}</th>
-        <th class="isAdmin"><cru-mat-icon *ngIf="user.isAdmin">check</cru-mat-icon></th>
-        <th>
+        <td class="username" [class.admin]="user.isAdmin">{{ user.username }}</td>
+        <td><cru-mat-icon class="admin-icon" *ngIf="user.isAdmin">check</cru-mat-icon></td>
+        <td>
           <button class="action-button" cruButton="dangerous">change password</button>
           <button class="action-button" cruButton="dangerous">delete</button>
-        </th>
+        </td>
       </tr>
     </tbody>
   </table>

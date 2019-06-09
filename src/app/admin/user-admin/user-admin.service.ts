@@ -17,17 +17,38 @@ export class UserAdminService {
   public getUserList(): Observable<UserInfo[]> {
     return of([
       {
-        username: 'user1',
+        username: "itsanadmin",
         isAdmin: true
       },
       {
-        username: 'useruseruseruser2',
+        username: 'itsauser',
+        isAdmin: false
+      },
+      {
+        username: 'anotheruser',
         isAdmin: false
       }
-    ]).pipe(delay(2000));
+    ]).pipe(delay(1000));
   }
 
-  public setUserAdmin(value: boolean): Observable<boolean> {
-    return of(value).pipe(delay(2000));
+  private debug(message: string): void {
+    console.debug('UserAdminService a request is made : ' + message);
+  }
+
+  // Set a user's permission.
+  public setUserAdmin(username: string, isAdmin: boolean): Observable<boolean> {
+    this.debug(`Set user ${username} as ${isAdmin ? 'ADMIN' : 'USER'}.`);
+    return of(isAdmin).pipe(delay(2000));
+  }
+
+  public changeUserPassword(username: string, password: string): Observable<boolean> {
+    this.debug(`Change user ${username} 's password to ${password}.`);
+    return of(true).pipe(delay(2000));
+  }
+
+  // Delete a user.
+  public deleteUser(username: string): Observable<boolean> {
+    this.debug(`Delete user ${username}.`);
+    return of(true).pipe(delay(2000));
   }
 }

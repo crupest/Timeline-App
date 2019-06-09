@@ -24,23 +24,33 @@ tbody {
   border: 0.5px solid black;
 }
 
-tbody th {
+tbody td {
   border: 0.5px solid black;
   font-weight: normal;
+  text-align: center;
+}
+
+table td:nth-child(1) {
+  background: #cccccc;
 }
 
 .username {
-  color: #1e92ff;
+  color: black;
+  padding: 0 3px;
 }
 
-.isAdmin {
+.username.admin {
   color: red;
 }
 
-cru-mat-icon {
-  vertical-align: top;
+.admin-icon {
+  color: red;
+  font-size: 1.2em;
+  vertical-align: middle;
 }
 
 .action-button {
-  margin: 2px 5px;
+  margin: 2px 3px;
+  padding: 3px 5px;
+  font-size: 0.85em;
 }
