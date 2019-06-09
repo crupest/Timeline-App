@@ -16,7 +16,7 @@
         <td class="username" [class.admin]="user.isAdmin">{{ user.username }}</td>
         <td><cru-mat-icon class="admin-icon" *ngIf="user.isAdmin">check</cru-mat-icon></td>
         <td>
-          <button class="action-button" cruButton="dangerous">change password</button>
+          <button class="action-button" cruButton="dangerous" (click)="changePassword(user.username)">change password</button>
           <button class="action-button" cruButton="dangerous">delete</button>
         </td>
       </tr>

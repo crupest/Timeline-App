@@ -41,7 +41,7 @@ interface DialogRefInternal<T> extends DialogRef<T> {
 @Injectable({
   providedIn: 'root'
 })
-export class DialogService {
+export class CruDialogService {
   public _dialogOverlay: DialogOverlayComponent | null = null;
 
   private readonly _dialogQueue: DialogRefInternal<any>[] = [];
@@ -155,7 +155,7 @@ export class DialogHostDirective implements OnDestroy {
 })
 export class DialogOverlayComponent implements OnInit, OnDestroy {
   public constructor(
-    private service: DialogService,
+    private service: CruDialogService,
     private componentFactoryResolver: ComponentFactoryResolver,
     private changeDetector: ChangeDetectorRef
   ) {}

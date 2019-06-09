@@ -9,6 +9,7 @@ import { ChangePasswordDialogComponent } from './change-password-dialog/change-p
 @NgModule({
   declarations: [UserAdminComponent, ChangePasswordDialogComponent],
   imports: [CommonModule, CruModule],
-  exports: [UserAdminComponent]
+  exports: [UserAdminComponent],
+  entryComponents: [ChangePasswordDialogComponent]
 })
 export class UserAdminModule {}
