@@ -2,30 +2,29 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
-import { CruButtonDirective } from './button/button.directive';
-import { CruLoadingComponent } from './loading/loading.component';
-import { CruMatIconComponent } from './mat-icon/mat-icon.component';
-import { CruIconButtonComponent } from './icon-button/icon-button.component';
-import { CruSideNavComponent } from './side-nav/side-nav.component';
-import { CruSideNavItemComponent } from './side-nav-item/side-nav-item.component';
+import { CruButtonModule } from './button/button.module';
+import { CruLoadingModule } from './loading/loading.module';
+import { CruIconButtonModule } from './icon-button/icon-button.module';
+import { CruMatIconModule } from './mat-icon/mat-icon.module';
+import { CruSideNavModule } from './side-nav/side-nav.module';
 
 @NgModule({
-  declarations: [
-    CruLoadingComponent,
-    CruMatIconComponent,
-    CruIconButtonComponent,
-    CruButtonDirective,
-    CruSideNavComponent,
-    CruSideNavItemComponent
+  imports: [
+    CommonModule,
+    RouterModule,
+    CruButtonModule,
+    CruIconButtonModule,
+    CruLoadingModule,
+    CruMatIconModule,
+    CruSideNavModule
   ],
-  imports: [CommonModule, RouterModule],
   exports: [
-    CruLoadingComponent,
-    CruMatIconComponent,
-    CruIconButtonComponent,
-    CruButtonDirective,
-    CruSideNavComponent,
-    CruSideNavItemComponent
+    CruButtonModule,
+    CruLoadingModule,
+    CruButtonModule,
+    CruIconButtonModule,
+    CruMatIconModule,
+    CruSideNavModule
   ]
 })
 export class CruModule {}
