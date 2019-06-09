@@ -6,10 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./change-password-dialog.component.css']
 })
 export class ChangePasswordDialogComponent implements OnInit {
+  public constructor() {}
 
-  public constructor() { }
+  public data!: { username: string };
 
-  public ngOnInit(): void {
-  }
-
+  public ngOnInit(): void {}
 }

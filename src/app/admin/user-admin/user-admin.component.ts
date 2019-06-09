@@ -21,6 +21,10 @@ export class UserAdminComponent {
   public users: UserInfo[] | undefined;
 
   public changePassword(username: string): void {
-    this.dialogService.pushDialog(ChangePasswordDialogComponent);
+    this.dialogService.pushDialog(ChangePasswordDialogComponent, {
+      data: {
+        username
+      }
+    });
   }
 }

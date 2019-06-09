@@ -31,6 +31,7 @@ export interface DialogRef<T> {
 export interface DialogOptions {
   overlayBackground?: string;
   overlayCloseOnClick?: boolean;
+  data: any;
 }
 
 interface DialogRefInternal<T> extends DialogRef<T> {
@@ -89,12 +90,13 @@ export class CruDialogService {
         overlay.background = (options && options.overlayBackground) || overlay.defaultBackground;
         overlay.closeOnClick =
           (options && options.overlayCloseOnClick) || overlay.defaultCloseOnClick;
-          overlay.createContent(contentTemplate, () => {
+        overlay.createContent(contentTemplate, () => {
           closeSubject.next('close');
           closeSubject.complete();
           component = null;
         });
         component = overlay.contentComponent;
+        (<any>component).data = options && options.data;
       },
       _options: options
     };
