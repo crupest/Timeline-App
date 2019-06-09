@@ -4,6 +4,8 @@ import { RouterModule } from '@angular/router';
 
 import { CruModule } from '../cru/cru.module';
 
+import { UserAdminModule } from './user-admin/user-admin.module';
+
 import { ForbiddenPageComponent } from './forbidden-page/forbidden-page.component';
 import { AdminPageComponent } from './admin-page/admin-page.component';
 import { UserAdminComponent } from './user-admin/user-admin.component';
@@ -11,10 +13,14 @@ import { UserAdminComponent } from './user-admin/user-admin.component';
 import { AdminGuard } from './admin.guard';
 
 @NgModule({
-  declarations: [ForbiddenPageComponent, AdminPageComponent, UserAdminComponent],
+  declarations: [
+    ForbiddenPageComponent,
+    AdminPageComponent
+  ],
   imports: [
     CommonModule,
     CruModule,
+    UserAdminModule,
     RouterModule.forChild([
       { path: 'forbidden', component: ForbiddenPageComponent },
       {
