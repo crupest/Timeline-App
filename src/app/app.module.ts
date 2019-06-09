@@ -9,6 +9,8 @@ import { HomeModule } from './home/home.module';
 import { UserModule } from './user/user.module';
 import { AdminModule } from './admin/admin.module';
 
+import { CruDialogModule } from './cru/dialog';
+
 import { WINDOW } from './inject-tokens';
 
 @NgModule({
@@ -16,6 +18,7 @@ import { WINDOW } from './inject-tokens';
   imports: [
     BrowserModule,
     HomeModule, TodoModule, UserModule, AdminModule,
+    CruDialogModule,
     RouterModule.forRoot([
       { path: '', redirectTo: '/home', pathMatch: 'full' },
     ])
