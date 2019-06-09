@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 import { CruButtonModule } from './button/button.module';
-import { CruLoadingModule } from './loading/loading.module';
 import { CruIconButtonModule } from './icon-button/icon-button.module';
+import { CruLoadingModule } from './loading/loading.module';
 import { CruMatIconModule } from './mat-icon/mat-icon.module';
 import { CruSideNavModule } from './side-nav/side-nav.module';
 
@@ -20,9 +20,8 @@ import { CruSideNavModule } from './side-nav/side-nav.module';
   ],
   exports: [
     CruButtonModule,
-    CruLoadingModule,
-    CruButtonModule,
     CruIconButtonModule,
+    CruLoadingModule,
     CruMatIconModule,
     CruSideNavModule
   ]
