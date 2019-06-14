@@ -8,6 +8,7 @@ import { CruIconButtonModule } from './icon-button/icon-button.module';
 import { CruLoadingModule } from './loading/loading.module';
 import { CruMatIconModule } from './mat-icon/mat-icon.module';
 import { CruSideNavModule } from './side-nav/side-nav.module';
+import { DialogBoxComponent } from './dialog/dialog-box/dialog-box.component';
 
 @NgModule({
   imports: [
@@ -27,6 +28,7 @@ import { CruSideNavModule } from './side-nav/side-nav.module';
     CruLoadingModule,
     CruMatIconModule,
     CruSideNavModule
-  ]
+  ],
+  declarations: [DialogBoxComponent]
 })
 export class CruModule {}

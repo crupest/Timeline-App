@@ -20,6 +20,8 @@ import { CommonModule } from '@angular/common';
 
 import { Observable, Subject } from 'rxjs';
 
+import { DialogBoxComponent } from './dialog-box/dialog-box.component';
+
 /**
  * The inject token used to inject the data (if provided) into the dialog component.
  * See [[DialogOptions.data]].
@@ -199,7 +201,7 @@ export class CruDialogService {
           closeSubject.next('close');
           closeSubject.complete();
           component = null;
-        });
+        }, options && options.data);
         component = overlay.contentComponent;
       },
       _options: options
@@ -238,10 +240,10 @@ export class CruDialogService {
  * destroy notifying.
  */
 @Directive({
-  selector: '[cru-dialog-host]'
+  selector: '[cru-dialog-outlet]'
 })
-export class DialogHostDirective implements OnDestroy {
-  public constructor(public viewContainerRef: ViewContainerRef) {}
+export class DialogOutletDirective implements OnDestroy {
+  public constructor(public viewContainerRef: ViewContainerRef) { }
 
   /**
    * The handler invoked when the directive is destroyed.
@@ -260,7 +262,11 @@ export class DialogHostDirective implements OnDestroy {
 @Component({
   selector: 'cru-dialog-overlay',
   template:
-    '<div *ngIf="hostVisible" #trueOverlay [style.background]="background" (click)="onClick($event)"><ng-container cru-dialog-host></ng-container></div>',
+    `
+      <div *ngIf="hostVisible" #trueOverlay [style.background]="background" (click)="onClick($event)">
+        <ng-container cru-dialog-outlet></ng-container>
+      </div>
+    `,
   styles: [
     `
       div {
@@ -282,11 +288,7 @@ export class DialogOverlayComponent implements OnInit, OnDestroy {
     private componentFactoryResolver: ComponentFactoryResolver,
     private changeDetector: ChangeDetectorRef,
     private injector: Injector
-  ) {}
-
-  @ViewChild('trueOverlay', { static: false })
-  public trueOverlay: ElementRef | null = null;
-
+  ) { }
   /**
    * The default background of the overlay. Used when the background is not
    * provided in dialog options.
@@ -305,8 +307,11 @@ export class DialogOverlayComponent implements OnInit, OnDestroy {
 
   public closeOnClick!: boolean;
 
-  @ViewChild(DialogHostDirective, { static: false })
-  public host: DialogHostDirective | null = null;
+  @ViewChild('trueOverlay', { static: false })
+  public trueOverlay: ElementRef | null = null;
+
+  @ViewChild(DialogOutletDirective, { static: false })
+  public host: DialogOutletDirective | null = null;
 
   public hostVisible: boolean = false;
 
@@ -339,7 +344,7 @@ export class DialogOverlayComponent implements OnInit, OnDestroy {
     this.changeDetector.detectChanges();
     this.host!.closeHandler = closeHandler;
     const contentFactory = this.componentFactoryResolver.resolveComponentFactory(contentTemplate);
-    const i = ReflectiveInjector.resolveAndCreate([{provide: CRU_DIALOG_DATA, useValue: data}], this.injector);
+    const i = ReflectiveInjector.resolveAndCreate([{ provide: CRU_DIALOG_DATA, useValue: data }], this.injector);
     const componentRef = this.host!.viewContainerRef.createComponent(contentFactory, undefined, i);
     this.contentComponent = componentRef.instance;
   }
@@ -365,7 +370,7 @@ export class DialogOverlayComponent implements OnInit, OnDestroy {
 
 @NgModule({
   imports: [CommonModule],
-  declarations: [DialogOverlayComponent, DialogHostDirective],
-  exports: [DialogOverlayComponent]
+  declarations: [DialogOverlayComponent, DialogOutletDirective, DialogBoxComponent],
+  exports: [DialogOverlayComponent, DialogBoxComponent]
 })
-export class CruDialogModule {}
+export class CruDialogModule { }
