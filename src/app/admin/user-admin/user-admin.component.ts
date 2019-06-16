@@ -22,9 +22,19 @@ export class UserAdminComponent {
 
   public changePassword(username: string): void {
     this.dialogService.pushDialog(ChangePasswordDialogComponent, {
+      overlayCloseOnClick: false,
       data: {
         username
       }
     });
+  }
+
+  public itemKeyDown(event: KeyboardEvent, index: number): void {
+    if (event.code === 'ArrowDown' && index < this.users!.length - 1) {
+      ((event.currentTarget as HTMLElement).nextElementSibling as HTMLElement).focus();
+    }
+    if (event.code === 'ArrowUp' && index > 0) {
+      ((event.currentTarget as HTMLElement).previousElementSibling as HTMLElement).focus();
+    }
   }
 }

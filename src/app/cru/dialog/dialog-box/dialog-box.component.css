@@ -1,0 +1,7 @@
+:host {
+  display: block;
+  background: rgb(230, 230, 230);
+  border-radius: 5px;
+  box-shadow: 0 0 3px 3px rgb(116, 211, 255);
+  padding: 5px;
+}

@@ -12,7 +12,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of users">
+      <tr *ngFor="let user of users; let i = index" tabindex="0" (keydown)="itemKeyDown($event, i)">
         <td class="username" [class.admin]="user.isAdmin">{{ user.username }}</td>
         <td><cru-mat-icon class="admin-icon" *ngIf="user.isAdmin">check</cru-mat-icon></td>
         <td>

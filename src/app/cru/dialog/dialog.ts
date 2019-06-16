@@ -14,9 +14,10 @@ import {
   ElementRef,
   InjectionToken,
   Injector,
-  ReflectiveInjector
+  ReflectiveInjector,
+  Inject
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 
 import { Observable, Subject } from 'rxjs';
 
@@ -27,6 +28,8 @@ import { DialogBoxComponent } from './dialog-box/dialog-box.component';
  * See [[DialogOptions.data]].
  */
 export const CRU_DIALOG_DATA = new InjectionToken<any>('cru-dialog-data');
+
+export const CRU_DIALOG_CONTROLLER = new InjectionToken<DialogController>('cru-dialog-controller');
 
 /**
  * The reason why dialog is closed.
@@ -100,6 +103,10 @@ export interface DialogOptions {
    * If presented, it will be able to be injected to the component with [[CRU_DIALOG_DATA]].
    */
   data?: any;
+}
+
+export interface DialogController {
+  close(): void;
 }
 
 /**
@@ -195,13 +202,25 @@ export class CruDialogService {
         }
         state = 'opening';
         overlay.background = (options && options.overlayBackground) || overlay.defaultBackground;
-        overlay.closeOnClick =
-          (options && options.overlayCloseOnClick) || overlay.defaultCloseOnClick;
-        overlay.createContent(contentTemplate, () => {
-          closeSubject.next('close');
-          closeSubject.complete();
-          component = null;
-        }, options && options.data);
+        if (options && options.overlayCloseOnClick !== undefined) {
+          overlay.closeOnClick = options.overlayCloseOnClick;
+        } else {
+          overlay.closeOnClick = overlay.defaultCloseOnClick;
+        }
+        overlay.createContent(
+          contentTemplate,
+          () => {
+            closeSubject.next('close');
+            closeSubject.complete();
+            component = null;
+          },
+          {
+            close: () => {
+              dialog.close();
+            }
+          },
+          options && options.data
+        );
         component = overlay.contentComponent;
       },
       _options: options
@@ -243,7 +262,7 @@ export class CruDialogService {
   selector: '[cru-dialog-outlet]'
 })
 export class DialogOutletDirective implements OnDestroy {
-  public constructor(public viewContainerRef: ViewContainerRef) { }
+  public constructor(public viewContainerRef: ViewContainerRef) {}
 
   /**
    * The handler invoked when the directive is destroyed.
@@ -261,12 +280,11 @@ export class DialogOutletDirective implements OnDestroy {
  */
 @Component({
   selector: 'cru-dialog-overlay',
-  template:
-    `
-      <div *ngIf="hostVisible" #trueOverlay [style.background]="background" (click)="onClick($event)">
-        <ng-container cru-dialog-outlet></ng-container>
-      </div>
-    `,
+  template: `
+    <div *ngIf="hostVisible" #trueOverlay [style.background]="background" (click)="onClick($event)">
+      <ng-container cru-dialog-outlet></ng-container>
+    </div>
+  `,
   styles: [
     `
       div {
@@ -284,11 +302,12 @@ export class DialogOutletDirective implements OnDestroy {
 })
 export class DialogOverlayComponent implements OnInit, OnDestroy {
   public constructor(
+    @Inject(DOCUMENT) private document: Document,
     private service: CruDialogService,
     private componentFactoryResolver: ComponentFactoryResolver,
     private changeDetector: ChangeDetectorRef,
     private injector: Injector
-  ) { }
+  ) {}
   /**
    * The default background of the overlay. Used when the background is not
    * provided in dialog options.
@@ -317,6 +336,8 @@ export class DialogOverlayComponent implements OnInit, OnDestroy {
 
   public contentComponent: any = null;
 
+  private lastFocusedElement: Element | null = null;
+
   public ngOnInit(): void {
     if (this.service._dialogOverlay) {
       throw new Error('An dialog overlay is already created.');
@@ -332,19 +353,37 @@ export class DialogOverlayComponent implements OnInit, OnDestroy {
    * Create a component instance of given component template class.
    * Add it to the tree.
    * @param contentTemplate the component class to create
-   * @param closeHandler the handler called when it is destroyed
+   * @param closeEventListener the handler called when it is destroyed
    * @param data the data passed to the dialog component
+   * @param controller the controller passed to the dialog component
    */
-  public createContent(contentTemplate: Type<any>, closeHandler: () => void, data?: any): void {
+  public createContent(
+    contentTemplate: Type<any>,
+    closeEventListener: () => void,
+    controller: DialogController,
+    data?: any
+  ): void {
     if (this.hostVisible) {
       throw new Error('Dialog overlay already has content.');
     }
 
+    //remember the focused element.
+    this.lastFocusedElement = this.document.activeElement;
+
+    // make the host visible.
     this.hostVisible = true;
+    // explicitly detect changes to make dom change is made now
     this.changeDetector.detectChanges();
-    this.host!.closeHandler = closeHandler;
+
+    this.host!.closeHandler = closeEventListener;
     const contentFactory = this.componentFactoryResolver.resolveComponentFactory(contentTemplate);
-    const i = ReflectiveInjector.resolveAndCreate([{ provide: CRU_DIALOG_DATA, useValue: data }], this.injector);
+    const i = ReflectiveInjector.resolveAndCreate(
+      [
+        { provide: CRU_DIALOG_DATA, useValue: data },
+        { provide: CRU_DIALOG_CONTROLLER, useValue: controller }
+      ],
+      this.injector
+    );
     const componentRef = this.host!.viewContainerRef.createComponent(contentFactory, undefined, i);
     this.contentComponent = componentRef.instance;
   }
@@ -359,6 +398,9 @@ export class DialogOverlayComponent implements OnInit, OnDestroy {
     this.host!.viewContainerRef.clear();
     this.hostVisible = false;
     this.changeDetector.detectChanges();
+
+    // restore focus
+    this.lastFocusedElement && (this.lastFocusedElement as HTMLElement).focus();
   }
 
   public onClick(event: MouseEvent): void {
@@ -373,4 +415,4 @@ export class DialogOverlayComponent implements OnInit, OnDestroy {
   declarations: [DialogOverlayComponent, DialogOutletDirective, DialogBoxComponent],
   exports: [DialogOverlayComponent, DialogBoxComponent]
 })
-export class CruDialogModule { }
+export class CruDialogModule {}

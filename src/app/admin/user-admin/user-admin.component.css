@@ -30,8 +30,12 @@ tbody td {
   text-align: center;
 }
 
-table td:nth-child(1) {
-  background: #cccccc;
+tbody tr:focus-within {
+  background: rgb(255, 255, 167);
+  box-shadow: 0px 0px 2px 2px rgb(0, 110, 255);
+  transform-origin: center;
+  transform: scale(1.03);
+  transition: all 0.33s;
 }
 
 .username {
