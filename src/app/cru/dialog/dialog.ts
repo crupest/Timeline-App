@@ -109,6 +109,11 @@ export interface DialogController {
   close(): void;
 }
 
+export interface DialogOverlayConfig {
+  background: string;
+  closeOnClick: boolean;
+}
+
 /**
  * The internal interface of [[DialogRef]], which contains some other properties used internal.
  */
@@ -201,12 +206,14 @@ export class CruDialogService {
           return;
         }
         state = 'opening';
-        overlay.background = (options && options.overlayBackground) || overlay.defaultBackground;
-        if (options && options.overlayCloseOnClick !== undefined) {
-          overlay.closeOnClick = options.overlayCloseOnClick;
-        } else {
-          overlay.closeOnClick = overlay.defaultCloseOnClick;
-        }
+        overlay.config = {
+          background: (options && options.overlayBackground) || overlay.defaultConfig.background,
+          closeOnClick:
+            options && options.overlayCloseOnClick !== undefined
+              ? options.overlayCloseOnClick
+              : overlay.defaultConfig.closeOnClick
+        };
+
         overlay.createContent(
           contentTemplate,
           () => {
@@ -281,7 +288,12 @@ export class DialogOutletDirective implements OnDestroy {
 @Component({
   selector: 'cru-dialog-overlay',
   template: `
-    <div *ngIf="hostVisible" #trueOverlay [style.background]="background" (click)="onClick($event)">
+    <div
+      *ngIf="hostVisible"
+      #trueOverlay
+      [style.background]="config.background"
+      (click)="onClick($event)"
+    >
       <ng-container cru-dialog-outlet></ng-container>
     </div>
   `,
@@ -308,23 +320,31 @@ export class DialogOverlayComponent implements OnInit, OnDestroy {
     private changeDetector: ChangeDetectorRef,
     private injector: Injector
   ) {}
+
+  public defaultConfig: DialogOverlayConfig = {
+    background: '#00000080',
+    closeOnClick: true
+  };
+
   /**
    * The default background of the overlay. Used when the background is not
    * provided in dialog options.
    */
   @Input()
-  public defaultBackground: string = '#00000080';
-
-  public background!: string;
+  public set defaultBackground(value: string) {
+    this.defaultConfig.background = value;
+  }
 
   /**
    * The default value of whether to close the dialog when overlay is clicked.
    * Used when the value is not provided in dialog options.
    */
   @Input()
-  public defaultCloseOnClick: boolean = true;
+  public set defaultCloseOnClick(value: boolean) {
+    this.defaultConfig.closeOnClick = value;
+  }
 
-  public closeOnClick!: boolean;
+  public config!: DialogOverlayConfig;
 
   @ViewChild('trueOverlay', { static: false })
   public trueOverlay: ElementRef | null = null;
@@ -404,7 +424,7 @@ export class DialogOverlayComponent implements OnInit, OnDestroy {
   }
 
   public onClick(event: MouseEvent): void {
-    if (this.closeOnClick && event.target === this.trueOverlay!.nativeElement) {
+    if (this.config.closeOnClick && event.target === this.trueOverlay!.nativeElement) {
       this.destroyContent();
     }
   }
