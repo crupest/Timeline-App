@@ -4,7 +4,12 @@ import { CruDialogService } from 'src/app/cru/dialog/dialog';
 
 import { UserInfo } from './entity';
 import { UserAdminService } from './user-admin.service';
-import { ChangePasswordDialogComponent } from './change-password-dialog/change-password-dialog.component';
+
+import {
+  ChangePasswordDialogComponent,
+  ChangePasswordDialogData
+} from './change-password-dialog/change-password-dialog.component';
+import { DeleteDialogComponent, DeleteDialogData } from './delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-user-admin',
@@ -25,7 +30,16 @@ export class UserAdminComponent {
       overlayCloseOnClick: false,
       data: {
         username
-      }
+      } as ChangePasswordDialogData
+    });
+  }
+
+  public delete(username: string): void {
+    this.dialogService.pushDialog(DeleteDialogComponent, {
+      overlayCloseOnClick: false,
+      data: {
+        username
+      } as DeleteDialogData
     });
   }
 
