@@ -4,20 +4,17 @@
   overflow: auto;
 }
 
-.action-bar {
-  display: flex;
-}
-
-.fill-remain {
-  flex: 1 1 auto;
-}
-
 table {
   border-spacing: 0;
 }
 
 th {
   padding: 0;
+}
+
+.action-cell {
+  display: flex;
+  justify-content: flex-end;
 }
 
 tbody {
@@ -30,12 +27,16 @@ tbody td {
   text-align: center;
 }
 
-tbody tr:focus-within {
+tbody tr:focus-within:not(.create-user-row) {
   background: rgb(255, 255, 167);
   box-shadow: 0px 0px 2px 2px rgb(0, 110, 255);
   transform-origin: center;
   transform: scale(1.03);
   transition: all 0.33s;
+}
+
+tr.create-user-row {
+  background: rgb(200, 255, 137);
 }
 
 .username {
@@ -57,4 +58,7 @@ tbody tr:focus-within {
   margin: 2px 3px;
   padding: 3px 5px;
   font-size: 0.85em;
+}
+
+.new-username {
 }

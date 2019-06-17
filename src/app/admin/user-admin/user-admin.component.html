@@ -1,14 +1,13 @@
-<cru-loading *ngIf="!users;else realContent"></cru-loading>
+<cru-loading *ngIf="!users; else realContent"></cru-loading>
 <ng-template #realContent>
-  <div class="action-bar">
-    <span class="fill-remain"></span>
-    <cru-icon-button>add</cru-icon-button>
-  </div>
   <table>
     <thead>
       <tr>
         <th>username</th>
         <th>admin</th>
+        <th class="action-cell">
+          <cru-icon-button (click)="prepareCreatingUser()">add</cru-icon-button>
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -16,8 +15,25 @@
         <td class="username" [class.admin]="user.isAdmin">{{ user.username }}</td>
         <td><cru-mat-icon class="admin-icon" *ngIf="user.isAdmin">check</cru-mat-icon></td>
         <td>
-          <button class="action-button" cruButton="dangerous" (click)="changePassword(user.username)">change password</button>
-          <button class="action-button" cruButton="dangerous" (click)="delete(user.username)">delete</button>
+          <button
+            class="action-button"
+            cruButton="dangerous"
+            (click)="changePassword(user.username)"
+          >
+            change password
+          </button>
+          <button class="action-button" cruButton="dangerous" (click)="delete(user.username)">
+            delete
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="newUser" class="create-user-row">
+        <td class="username">
+          <input type="text" class="new-username" [(ngModel)]="newUser.username" placeholder="new username..."/>
+        </td>
+        <td (click)="toggleNewUserAdmin()"><cru-mat-icon class="admin-icon" *ngIf="newUser.isAdmin">check</cru-mat-icon></td>
+        <td>
+          <button class="action-button" cruButton="create">create</button>
         </td>
       </tr>
     </tbody>

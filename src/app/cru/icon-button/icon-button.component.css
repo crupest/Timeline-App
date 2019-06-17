@@ -4,3 +4,8 @@ button {
   padding: 0;
   cursor: pointer;
 }
+
+button:focus {
+  outline: none;
+  box-shadow: 0 0 1px 2.5px #f1b606;
+}

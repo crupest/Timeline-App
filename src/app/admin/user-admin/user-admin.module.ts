@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 import { CruModule } from '../../cru/cru.module';
 
@@ -9,8 +10,13 @@ import { OperatingDialogComponent } from './operating-dialog/operating-dialog.co
 import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
 
 @NgModule({
-  declarations: [UserAdminComponent, ChangePasswordDialogComponent, OperatingDialogComponent, DeleteDialogComponent],
-  imports: [CommonModule, CruModule],
+  declarations: [
+    UserAdminComponent,
+    ChangePasswordDialogComponent,
+    OperatingDialogComponent,
+    DeleteDialogComponent
+  ],
+  imports: [CommonModule, FormsModule, CruModule],
   exports: [UserAdminComponent],
   entryComponents: [ChangePasswordDialogComponent]
 })

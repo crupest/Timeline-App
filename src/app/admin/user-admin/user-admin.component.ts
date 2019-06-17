@@ -25,6 +25,19 @@ export class UserAdminComponent {
 
   public users: UserInfo[] | undefined;
 
+  public newUser : UserInfo | null = null;
+
+  public prepareCreatingUser(): void {
+    this.newUser = {
+      username: '',
+      isAdmin: false
+    };
+  }
+
+  public toggleNewUserAdmin(): void {
+    this.newUser!.isAdmin = !this.newUser!.isAdmin;
+  }
+
   public changePassword(username: string): void {
     this.dialogService.pushDialog(ChangePasswordDialogComponent, {
       overlayCloseOnClick: false,

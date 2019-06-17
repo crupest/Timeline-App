@@ -13,10 +13,7 @@ import { UserAdminComponent } from './user-admin/user-admin.component';
 import { AdminGuard } from './admin.guard';
 
 @NgModule({
-  declarations: [
-    ForbiddenPageComponent,
-    AdminPageComponent
-  ],
+  declarations: [ForbiddenPageComponent, AdminPageComponent],
   imports: [
     CommonModule,
     CruModule,
