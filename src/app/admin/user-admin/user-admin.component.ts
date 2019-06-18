@@ -10,7 +10,12 @@ import {
   ChangePasswordDialogData
 } from './change-password-dialog/change-password-dialog.component';
 import { DeleteDialogComponent, DeleteDialogData } from './delete-dialog/delete-dialog.component';
-import { CreateDialogComponent } from './create-dialog/create-dialog.component';
+import { CreateDialogComponent, CreateDialogData } from './create-dialog/create-dialog.component';
+import {
+  ChangePermissionDialogData,
+  ChangePermissionDialogComponent
+} from './change-permission-dialog/change-permission-dialog.component';
+
 import { OperatingResult } from './operating-dialog/operating-dialog.component';
 
 @Component({
@@ -41,14 +46,16 @@ export class UserAdminComponent {
   }
 
   public create(): void {
-    this.dialogService.pushDialog(CreateDialogComponent, {
-      overlayCloseOnClick: false,
-      data: this.newUser as ChangePasswordDialogData
-    }).close$.subscribe(info => {
-      if ((info.data as OperatingResult) === 'success') {
-        delete this.newUser;
-      }
-    });
+    this.dialogService
+      .pushDialog(CreateDialogComponent, {
+        overlayCloseOnClick: false,
+        data: this.newUser as CreateDialogData
+      })
+      .close$.subscribe(info => {
+        if ((info.data as OperatingResult) === 'success') {
+          delete this.newUser;
+        }
+      });
   }
 
   public changePassword(username: string): void {
@@ -66,6 +73,16 @@ export class UserAdminComponent {
       data: {
         username
       } as DeleteDialogData
+    });
+  }
+
+  public changePermission(username: string, isAdmin: boolean): void {
+    this.dialogService.pushDialog(ChangePermissionDialogComponent, {
+      overlayCloseOnClick: false,
+      data: {
+        username,
+        isAdmin
+      } as ChangePermissionDialogData
     });
   }
 

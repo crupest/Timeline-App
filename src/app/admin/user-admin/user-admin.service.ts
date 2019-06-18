@@ -17,7 +17,7 @@ export class UserAdminService {
   public getUserList(): Observable<UserInfo[]> {
     return of([
       {
-        username: "itsanadmin",
+        username: 'itsanadmin',
         isAdmin: true
       },
       {
@@ -54,6 +54,11 @@ export class UserAdminService {
 
   public createUser(user: UserInfo): Observable<boolean> {
     this.debug(`Create user ${user}.`);
+    return of(true).pipe(delay(2000));
+  }
+
+  public changeUserPermission(username: string, isAdmin: boolean): Observable<boolean> {
+    this.debug(`Change user ${username}'s permission to ${isAdmin ? 'admin' : 'user'}.`);
     return of(true).pipe(delay(2000));
   }
 }

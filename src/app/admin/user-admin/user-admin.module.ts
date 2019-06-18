@@ -9,6 +9,7 @@ import { ChangePasswordDialogComponent } from './change-password-dialog/change-p
 import { OperatingDialogComponent } from './operating-dialog/operating-dialog.component';
 import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
 import { CreateDialogComponent } from './create-dialog/create-dialog.component';
+import { ChangePermissionDialogComponent } from './change-permission-dialog/change-permission-dialog.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { CreateDialogComponent } from './create-dialog/create-dialog.component';
     ChangePasswordDialogComponent,
     OperatingDialogComponent,
     DeleteDialogComponent,
-    CreateDialogComponent
+    CreateDialogComponent,
+    ChangePermissionDialogComponent
   ],
   imports: [CommonModule, FormsModule, CruModule],
   exports: [UserAdminComponent],
