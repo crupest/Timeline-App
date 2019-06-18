@@ -3,7 +3,7 @@
 @import url('loading-animation.css');
 @import url('https://fonts.googleapis.com/css?family=Noto+Sans|Noto+Sans+SC');
 
-@import url('./app/cru/style.css');
+@import './app/cru/style.scss';
 
 html,
 button,
@@ -13,8 +13,4 @@ input {
 
 body {
   margin: 0;
-}
-
-.fill-remaining-space {
-  flex: 1 1 auto;
 }
