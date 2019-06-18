@@ -1,24 +1,15 @@
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  Inject,
-  ViewChild,
-  ElementRef,
-  AfterViewChecked
-} from '@angular/core';
+import { Component, Input, Output, EventEmitter, Inject } from '@angular/core';
 import { CRU_DIALOG_CONTROLLER, DialogController } from 'src/app/cru/dialog/dialog';
 
 export type OperatingStep = 'input' | 'process' | 'done' | 'error';
 
 export type OperatingResult = 'success' | 'cancel' | 'error';
 
-const stepToResultMap: {[Key in OperatingStep]: OperatingResult} = {
-  'input': 'cancel',
-  'process': 'cancel',
-  'done': 'success',
-  'error': 'error'
+const stepToResultMap: { [Key in OperatingStep]: OperatingResult } = {
+  input: 'cancel',
+  process: 'cancel',
+  done: 'success',
+  error: 'error'
 };
 
 @Component({
@@ -26,13 +17,8 @@ const stepToResultMap: {[Key in OperatingStep]: OperatingResult} = {
   templateUrl: './operating-dialog.component.html',
   styleUrls: ['./operating-dialog.component.css']
 })
-export class OperatingDialogComponent implements AfterViewChecked {
+export class OperatingDialogComponent {
   public constructor(@Inject(CRU_DIALOG_CONTROLLER) private controller: DialogController) {}
-
-  @ViewChild('doItButton', { static: false })
-  public doItButton: ElementRef | undefined;
-  @ViewChild('closeButton', { static: false })
-  public closeButton: ElementRef | undefined;
 
   private _step: OperatingStep = 'input';
 
@@ -48,11 +34,6 @@ export class OperatingDialogComponent implements AfterViewChecked {
 
   @Output()
   public readonly submit = new EventEmitter();
-
-  public ngAfterViewChecked(): void {
-    this.doItButton && this.doItButton.nativeElement.focus();
-    this.closeButton && this.closeButton.nativeElement.focus();
-  }
 
   public close(): void {
     this.controller.close();
