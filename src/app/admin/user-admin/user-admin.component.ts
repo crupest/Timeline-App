@@ -10,11 +10,13 @@ import {
   ChangePasswordDialogData
 } from './change-password-dialog/change-password-dialog.component';
 import { DeleteDialogComponent, DeleteDialogData } from './delete-dialog/delete-dialog.component';
+import { CreateDialogComponent } from './create-dialog/create-dialog.component';
+import { OperatingResult } from './operating-dialog/operating-dialog.component';
 
 @Component({
   selector: 'app-user-admin',
   templateUrl: './user-admin.component.html',
-  styleUrls: ['./user-admin.component.css']
+  styleUrls: ['./user-admin.component.scss']
 })
 export class UserAdminComponent {
   public constructor(private service: UserAdminService, private dialogService: CruDialogService) {
@@ -25,7 +27,7 @@ export class UserAdminComponent {
 
   public users: UserInfo[] | undefined;
 
-  public newUser : UserInfo | null = null;
+  public newUser: UserInfo | null = null;
 
   public prepareCreatingUser(): void {
     this.newUser = {
@@ -36,6 +38,17 @@ export class UserAdminComponent {
 
   public toggleNewUserAdmin(): void {
     this.newUser!.isAdmin = !this.newUser!.isAdmin;
+  }
+
+  public create(): void {
+    this.dialogService.pushDialog(CreateDialogComponent, {
+      overlayCloseOnClick: false,
+      data: this.newUser as ChangePasswordDialogData
+    }).close$.subscribe(info => {
+      if ((info.data as OperatingResult) === 'success') {
+        delete this.newUser;
+      }
+    });
   }
 
   public changePassword(username: string): void {

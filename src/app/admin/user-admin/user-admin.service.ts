@@ -51,4 +51,9 @@ export class UserAdminService {
     this.debug(`Delete user ${username}.`);
     return of(true).pipe(delay(2000));
   }
+
+  public createUser(user: UserInfo): Observable<boolean> {
+    this.debug(`Create user ${user}.`);
+    return of(true).pipe(delay(2000));
+  }
 }

@@ -39,6 +39,11 @@ export const CRU_DIALOG_CONTROLLER = new InjectionToken<DialogController>('cru-d
  */
 export type DialogCloseReason = 'close' | 'cancel';
 
+export interface DialogCloseInfo {
+  readonly reason: DialogCloseReason;
+  readonly data?: any;
+}
+
 /**
  * The state of the dialog.
  * - `'closed'` means it is closed after it was opened (see [[DialogCloseReason]]).
@@ -72,7 +77,7 @@ export interface DialogRef<T> {
    * The emitted value indicates the close reason. See [[DialogCloseReason]] for
    * each possible value and its meaning.
    */
-  readonly close$: Observable<DialogCloseReason>;
+  readonly close$: Observable<DialogCloseInfo>;
   /**
    * Close or cancel the dialog. Return the real reason whether it is closed or canceled.
    * See [[DialogCloseReason]].
@@ -106,7 +111,8 @@ export interface DialogOptions {
 }
 
 export interface DialogController {
-  close(): void;
+  closeData?: any;
+  close(data?: any): void;
 }
 
 export interface DialogOverlayConfig {
@@ -174,9 +180,10 @@ export class CruDialogService {
       console.warn('Too many (> 10) dialogs are waiting in queue.');
     }
 
-    const closeSubject = new Subject<DialogCloseReason>();
+    const closeSubject = new Subject<DialogCloseInfo>();
     let state: DialogState = 'waiting';
     let component: T | null = null;
+    let closeData: any | undefined;
 
     const dialog: DialogRefInternal<T> = {
       get component(): T | null {
@@ -192,7 +199,10 @@ export class CruDialogService {
           overlay.destroyContent();
           return 'close';
         } else if (state === 'waiting') {
-          closeSubject.next('cancel');
+          closeSubject.next({
+            reason: 'cancel',
+            data: closeData
+          });
           closeSubject.complete();
           return 'cancel';
         } else if (state === 'canceled') {
@@ -217,11 +227,20 @@ export class CruDialogService {
         overlay.createContent(
           contentTemplate,
           () => {
-            closeSubject.next('close');
+            closeSubject.next({
+              reason: 'close',
+              data: closeData
+            });
             closeSubject.complete();
             component = null;
           },
           {
+            get closeData(): any | undefined {
+              return closeData;
+            },
+            set closeData(data: any | undefined) {
+              closeData = data;
+            },
             close: () => {
               dialog.close();
             }
@@ -232,7 +251,7 @@ export class CruDialogService {
       },
       _options: options
     };
-    closeSubject.subscribe(reason => {
+    closeSubject.subscribe(info => {
       const index = this.dialogQueue.indexOf(dialog);
       if (index > -1) {
         // remove it from dialog queue
@@ -240,7 +259,7 @@ export class CruDialogService {
       }
       // if the current dialog is **closed**, then there might be dialog waiting in the queue
       // then open it next tick
-      if (reason === 'close') {
+      if (info.reason === 'close') {
         if (this._dialogQueue.length !== 0) {
           setTimeout(() => {
             if (this._dialogQueue.length !== 0) {

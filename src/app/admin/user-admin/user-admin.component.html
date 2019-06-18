@@ -6,7 +6,7 @@
         <th>username</th>
         <th>admin</th>
         <th class="action-cell">
-          <cru-icon-button (click)="prepareCreatingUser()">add</cru-icon-button>
+          <cru-icon-button class="add" (click)="prepareCreatingUser()">add</cru-icon-button>
         </th>
       </tr>
     </thead>
@@ -33,7 +33,7 @@
         </td>
         <td (click)="toggleNewUserAdmin()"><cru-mat-icon class="admin-icon" *ngIf="newUser.isAdmin">check</cru-mat-icon></td>
         <td>
-          <button class="action-button" cruButton="create">create</button>
+          <button class="action-button" cruButton="create" (click)="create()">create</button>
         </td>
       </tr>
     </tbody>

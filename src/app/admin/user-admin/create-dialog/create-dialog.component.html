@@ -1,0 +1,4 @@
+<app-operating-dialog [step]="step" (submit)="submit()">
+  <p dialogTitle>You are creating <span *ngIf="data.isAdmin;else userLabel">admin</span><ng-template #userLabel>user</ng-template> {{ data.username }} .</p>
+  <div dialogError>An error occured.</div>
+</app-operating-dialog>
