@@ -1,6 +1,7 @@
 # Welcome to Timeline App
 
-[![Build Status](https://dev.azure.com/crupest-web/Timeline/_apis/build/status/crupest.Timeline-App?branchName=master)](https://dev.azure.com/crupest-web/Timeline/_build/latest?definitionId=4&branchName=master)
+**This project is no longer under development!**
+I turned to React for this project. See new project [here](https://github.com/crupest/Timeline-React).
 
 This is the front-end of my first web app called **Timeline**.
 
