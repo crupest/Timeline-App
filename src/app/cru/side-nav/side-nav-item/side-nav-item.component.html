@@ -1,0 +1,6 @@
+<a *ngIf="link !== undefined; else noLink" [routerLink]="link" routerLinkActive="active">
+  <ng-content></ng-content>
+</a>
+<ng-template #noLink>
+  <a><ng-content></ng-content></a>
+</ng-template>

@@ -1,0 +1,10 @@
+<app-operating-dialog [step]="step" (submit)="submit()">
+  <p dialogTitle>
+    You are changing user {{ data.username }} from
+    <span *ngIf="!data.isAdmin; else userLabel">admin</span>
+    <ng-template #userLabel>user</ng-template> to
+    <span *ngIf="data.isAdmin; else userLabel">admin</span>
+    <ng-template #userLabel>user</ng-template>.
+  </p>
+  <div dialogError>An error occured.</div>
+</app-operating-dialog>

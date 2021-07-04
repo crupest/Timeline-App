@@ -11,7 +11,7 @@ export function getBaseUrl(): string {
 }
 
 const providers = [
-  { provide: 'BASE_URL', useFactory: getBaseUrl },
+  { provide: 'BASE_URL', useFactory: getBaseUrl, deps: [] },
   { provide: API_BASE_URL, useValue: environment.apiUrl }
 ];
 

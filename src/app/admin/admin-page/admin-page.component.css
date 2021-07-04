@@ -1,0 +1,35 @@
+:host {
+  display: flex;
+}
+
+cru-side-nav {
+  width: 200px;
+  flex: 0 0 auto;
+}
+
+h2 {
+  margin: 10px 5px;
+}
+
+.main {
+  flex: 1 1 auto;
+}
+
+@media (max-width: 767.98px) {
+  h2 {
+    display: none;
+  }
+
+  :host {
+    flex-wrap: wrap;
+  }
+
+  cru-side-nav {
+    width: 100%;
+  }
+
+  .main {
+    width: 100%;
+  }
+}
+

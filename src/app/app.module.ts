@@ -7,6 +7,9 @@ import { AppComponent } from './app.component';
 import { TodoModule } from './todo/todo.module';
 import { HomeModule } from './home/home.module';
 import { UserModule } from './user/user.module';
+import { AdminModule } from './admin/admin.module';
+
+import { CruDialogModule } from './cru/dialog/dialog';
 
 import { WINDOW } from './inject-tokens';
 
@@ -14,7 +17,8 @@ import { WINDOW } from './inject-tokens';
   declarations: [AppComponent],
   imports: [
     BrowserModule,
-    HomeModule, TodoModule, UserModule,
+    HomeModule, TodoModule, UserModule, AdminModule,
+    CruDialogModule,
     RouterModule.forRoot([
       { path: '', redirectTo: '/home', pathMatch: 'full' },
     ])

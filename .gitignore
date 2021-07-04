@@ -29,14 +29,19 @@
 /.sass-cache
 /connect.lock
 /coverage
+/junit
 /libpeerconnection.log
 npm-debug.log
 yarn-error.log
 testem.log
 /typings
+#temp generated docs
+/gdocs
+
 
 # System Files
 .DS_Store
 Thumbs.db
 
-junit
+# unit tests
+

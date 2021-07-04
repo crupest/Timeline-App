@@ -1,0 +1,20 @@
+<cru-dialog-box>
+  <ng-content select="[dialogTitle]"></ng-content>
+  <ng-content select="[dialogInput]" *ngIf="step === 'input'"></ng-content>
+  <div class="bottom" [ngSwitch]="step">
+    <ng-template ngSwitchCase="input">
+      <button cruButton (click)="close()">cancel</button>
+      <button cruAutoFocus cruButton="dangerous" (click)="doIt()">do it</button>
+    </ng-template>
+    <ng-template ngSwitchCase="process">
+      <cru-loading></cru-loading>
+    </ng-template>
+    <ng-template ngSwitchCase="done">
+      <button cruAutoFocus cruButton="create" (click)="close()">done!</button>
+    </ng-template>
+    <ng-template ngSwitchCase="error">
+      <ng-content select="[dialogError]"></ng-content>
+      <button cruAutoFocus cruButton (click)="close()">got it!</button>
+    </ng-template>
+  </div>
+</cru-dialog-box>

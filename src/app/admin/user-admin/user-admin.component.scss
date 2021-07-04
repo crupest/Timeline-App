@@ -1,0 +1,70 @@
+@import '../../cru/focus-shadow.scss';
+
+:host {
+  display: block;
+  padding: 10px;
+  overflow: auto;
+}
+
+table {
+  border-spacing: 0;
+}
+
+th {
+  padding: 0;
+}
+
+.action-cell {
+  display: flex;
+  justify-content: flex-end;
+}
+
+cru-icon-button.add {
+  color: green;
+}
+
+tbody {
+  border: 0.5px solid black;
+}
+
+tbody td {
+  border: 0.5px solid black;
+  font-weight: normal;
+  text-align: center;
+}
+
+tbody tr:focus-within:not(.create-user-row) {
+  @extend %focus-shadow;
+  background: rgb(177, 255, 255);
+  transform-origin: center;
+  transform: scale(1.03);
+  transition: all 0.33s;
+}
+
+tr.create-user-row {
+  background: rgb(200, 255, 137);
+}
+
+.username {
+  color: black;
+  padding: 0 3px;
+}
+
+.username.admin {
+  color: red;
+}
+
+.admin-icon {
+  color: red;
+  font-size: 1.2em;
+  vertical-align: middle;
+}
+
+.action-button {
+  margin: 2px 3px;
+  padding: 3px 5px;
+  font-size: 0.85em;
+}
+
+.new-username {
+}

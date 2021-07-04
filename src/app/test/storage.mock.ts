@@ -1,5 +1,5 @@
 import { Mock } from './mock';
-import { nullIfUndefined } from '../utilities/language-untilities';
+import { nullIfUndefined } from '../language-untilities';
 
 export function createMockStorage(): Mock<Storage> {
   const map: { [key: string]: string } = {};

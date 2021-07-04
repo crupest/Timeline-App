@@ -2,6 +2,7 @@
   <a routerLink="/">
     <img width="30" height="30" src="assets/icon.svg">Timeline</a>
   <a routerLink="/todo">TodoList</a>
+  <a *ngIf="isAdmin" routerLink="/admin">Admin</a>
   <span class="fill-remaining-space"></span>
   <a *ngIf="avatarUrl" [routerLink]="['user', username]"><img class="avatar" [src]="avatarUrl"></a>
   <a *ngIf="!avatarUrl" routerLink="/login">login</a>
@@ -13,6 +14,7 @@
 
 <footer>
   <span class="fill-remaining-space"></span>
-  <a class="icp-record" href="http://www.miitbeian.gov.cn/state/outPortal/loginPortal.action"
+  <a class="icp-record" href="http://www.beian.miit.gov.cn"
     target=”_blank”>鄂ICP备18030913号-1</a>
 </footer>
+<cru-dialog-overlay></cru-dialog-overlay>

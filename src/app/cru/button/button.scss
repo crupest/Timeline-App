@@ -1,0 +1,54 @@
+@import '../focus-shadow.scss';
+
+.cru-button {
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 4px 8px;
+  border: none;
+  transition: all 0.33s
+}
+
+.cru-button.dangerous {
+  background: #ff0000;
+  color: white;
+}
+
+.cru-button.dangerous:hover {
+  background: #ff5436;
+}
+
+.cru-button.dangerous:active {
+  background: #ffa28a;
+}
+
+.cru-button.normal {
+  background: #00a9c8;
+  color: white;
+}
+
+.cru-button.normal:hover {
+  background: #00cff9;
+}
+
+.cru-button.normal:active {
+  background: #00dfff;
+}
+
+.cru-button.create {
+  background: #3f9060;
+  color: white;
+}
+
+.cru-button.create:hover {
+  background: #4eb178;
+}
+
+.cru-button.create:active {
+  background: #82c99f;
+}
+
+.cru-button:focus {
+  @extend %focus-shadow;
+  outline: none;
+}

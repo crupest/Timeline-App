@@ -1,4 +1,4 @@
-<app-loading id="loadIndicator" *ngIf="user === undefined" size="100px" [center]="true"></app-loading>
+<cru-loading id="loadIndicator" *ngIf="user === undefined" size="100px" [center]="true"></cru-loading>
 <p id="notExistMessage" *ngIf="user === null">The user <span class="username">{{username}}</span> does not exits.</p>
 <div id="userContainer" *ngIf="user" class="container">
   <div class="user-info">
